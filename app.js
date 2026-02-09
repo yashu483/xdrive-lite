@@ -9,8 +9,12 @@ import passport from "passport";
 import bcrypt from "bcryptjs";
 const PORT = process.env.SERVER_PORT;
 
-//importing server modules and routes
-import { prisma } from "./lib/prisma";
+//importing server side modules and routes
+import { prisma } from "./lib/prisma.js";
+import indexRouter from "./routes/indexRouter.js";
+import loginRouter from "./routes/loginRouter.js";
+import signupRouter from "./routes/signupRouter.js";
+import folderRouter from "./routes/foldersRouter.js";
 
 const app = express();
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
@@ -83,6 +87,11 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   next();
 });
+
+app.use("/", indexRouter);
+app.use("/login", loginRouter);
+app.use("/signup", signupRouter);
+app.use("/folders", folderRouter);
 
 app.listen(PORT, (err) => {
   if (err) {
