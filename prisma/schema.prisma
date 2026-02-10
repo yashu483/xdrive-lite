@@ -48,3 +48,10 @@ model Files {
   folder    Folders? @relation(fields: [folderId], references: [id])
   createdAt DateTime @default(now())
 }
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.Text
+  expiresAt DateTime
+}

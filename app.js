@@ -7,6 +7,7 @@ import url from "node:url";
 import { Strategy as LocalStrategy } from "passport-local";
 import passport from "passport";
 import bcrypt from "bcryptjs";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 const PORT = process.env.SERVER_PORT;
 
 //importing server side modules and routes
@@ -28,11 +29,16 @@ app.use(express.urlencoded({ extended: true }));
 //create new session
 app.use(
   session({
+    cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 },
     secret: "Great Secret",
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     name: "xdrive",
-    expires: 24 * 60 * 60 * 1000,
+    store: new PrismaSessionStore(prisma, {
+      checkPeriod: 2 * 60 * 1000,
+      dbRecordIdIsSessionId: true,
+      dbRecordIdFunction: undefined,
+    }),
   }),
 );
 
