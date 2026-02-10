@@ -1,7 +1,7 @@
 import { prisma } from "./../lib/prisma.js";
 
 const indexGet = (req, res, next) => {
-  res.send("Homepage");
+  res.render("index");
 };
 
 const loginGet = (req, res, next) => {

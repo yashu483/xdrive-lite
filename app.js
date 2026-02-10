@@ -92,6 +92,15 @@ app.use("/", indexRouter);
 app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
 app.use("/folders", folderRouter);
+app.use("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    res.redirect("/");
+  });
+});
 
 app.listen(PORT, (err) => {
   if (err) {
