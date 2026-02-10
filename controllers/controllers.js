@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { body, validationResult, matchedData } from "express-validator";
+
 import { prisma } from "./../lib/prisma.js";
 
 const indexGet = (req, res, next) => {
@@ -10,9 +11,21 @@ const loginGet = (req, res, next) => {
   res.render("login");
 };
 
-const loginPost = (req, res, next) => {
-  res.send("loginpost");
-};
+const loginPost = (req, res, next) => {};
+
+// validate login data
+const validateLogin = [
+  body("username")
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("username cannot be empty"),
+  body("password")
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("password cannot be empty"),
+];
 
 const signupGet = (req, res, next) => {
   res.render("signup");

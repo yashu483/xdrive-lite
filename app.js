@@ -47,13 +47,14 @@ passport.use(
           username: username,
         },
       });
-
+      console.log(user);
       // checks if username exists
       if (!user) {
         return done(null, false, { message: "Invalid username" });
       }
 
       const match = await bcrypt.compare(password, user.password);
+      console.log(match);
       if (!match) {
         return done(null, false, { message: "Invalid password" });
       }
@@ -66,7 +67,7 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  done(user.id);
+  done(null, user.id);
 });
 
 passport.deserializeUser(async (userId, done) => {

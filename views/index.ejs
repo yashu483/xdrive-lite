@@ -11,6 +11,9 @@
 <body>
   <%- include('header') %>
   <h1>hello</h1>
+  <% if(locals.currentUser){ %>
+  <h1><%= locals.currentUser.username %></h1>
+  <% } %>
 </body>
 
 </html>
