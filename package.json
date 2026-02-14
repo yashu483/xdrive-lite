@@ -20,7 +20,7 @@
   "homepage": "https://github.com/yashu483/xdrive-lite#readme",
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
-    "@prisma/client": "^7.3.0",
+    "@prisma/client": "^7.4.0",
     "@quixo3/prisma-session-store": "^3.1.19",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.4",
@@ -33,6 +33,6 @@
     "pg": "^8.18.0"
   },
   "devDependencies": {
-    "prisma": "^7.3.0"
+    "prisma": "^7.4.0"
   }
 }
