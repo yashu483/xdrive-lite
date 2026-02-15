@@ -26,6 +26,7 @@ html[data-theme="light"] {
   --signup-bg: black;
   --signup-color: white;
   --body-bg: rgb(247, 245, 255);
+  --description-color: gray;
 }
 html[data-theme="dark"] {
   --color-scheme: dark;
@@ -36,6 +37,7 @@ html[data-theme="dark"] {
   --signup-bg: rgb(252, 252, 252);
   --signup-color: black;
   --body-bg: rgb(26, 31, 37);
+  --description-color: rgb(207, 207, 207);
 }
 
 :root {
@@ -146,4 +148,6 @@ footer {
 
 footer > p {
   margin: 0;
+  color: var(--description-color);
+  font-size: 0.9rem;
 }
