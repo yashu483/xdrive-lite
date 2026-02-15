@@ -2,7 +2,10 @@ import bcrypt from "bcryptjs";
 import { body, validationResult, matchedData } from "express-validator";
 import { prisma } from "./../lib/prisma.js";
 
-const indexGet = (req, res, next) => {
+const indexGet = (req, res) => {
+  if (req.user) {
+    return res.redirect("/folders");
+  }
   res.render("index");
 };
 

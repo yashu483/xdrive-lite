@@ -6,7 +6,6 @@ html[data-theme="light"] {
 html[data-theme="dark"] {
   --heading-color: #dfd7fc;
   --description-color: rgb(236, 236, 236);
-  /* --highlight: rgba(84, 248, 55, 0.397); */
   --highlight: rgb(255, 166, 0);
 }
 
