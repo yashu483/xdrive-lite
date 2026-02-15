@@ -1,11 +1,15 @@
 <header>
   <a href="/" id="header-logo-anchor">
-    <div class="header-logo">
-      <img src="/icons/folder.png">
-      <h1 class="logo-name">Cloudly</h1>
-    </div>
+    <img src="/icons/folder.png">
+    <h1 class="logo-name">Cloudly</h1>
   </a>
   <div>
-    <button id="theme-toggle">Theme Toggle</button><a href="/login" class="header-button">Log In</a><a href="signup" class="header-button">Sign Up</a>
+    <button id="theme-toggle"></button>
+    <% if(!locals.currentUser){ %>
+    <a href="/login" class="login">Log In</a>
+    <a href="/signup" class="signup">Sign Up</a>
+    <% }else{ %>
+    <a href="/logout" class="signup logout">Logout</a>
+    <% } %>
   </div>
 </header>

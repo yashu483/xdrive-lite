@@ -1,1 +1,122 @@
 /* This file contains styles that mostly used on all pages */
+
+@font-face {
+  font-family: "Inter";
+  src: url("./../fonts/Inter.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("./../fonts/Roboto.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Google Sans";
+  src: url("./../fonts/GoogleSansFlex.ttf") format("truetype");
+  font-display: swap;
+}
+
+html[data-theme="light"] {
+  --color-scheme: light;
+  --theme-bg: url("./../icons/dark-50-black.svg");
+  --login-bg: white;
+  --login-border: 2px solid black;
+  --login-color: black;
+  --signup-bg: black;
+  --signup-color: white;
+  --header-bg: white;
+}
+html[data-theme="dark"] {
+  --color-scheme: dark;
+  --theme-bg: url("./../icons/light-50-white.svg");
+  --login-bg: rgb(27, 31, 34);
+  --login-border: 2px solid white;
+  --login-color: white;
+  --signup-bg: rgb(252, 252, 252);
+  --signup-color: black;
+  --header-bg: rgb(26, 31, 37);
+}
+
+:root {
+  font-family:
+    "Roboto",
+    "Inter",
+    "Google Sans",
+    system-ui,
+    -apple-system;
+  box-sizing: border-box;
+  color-scheme: var(--color-scheme);
+}
+
+/* header element styles */
+
+header {
+  position: sticky;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  padding-bottom: 15px;
+  gap: 10px;
+  border-bottom: 1px solid rgb(236, 236, 236);
+  background-color: var(--header-bg);
+}
+
+header a {
+  text-decoration: none;
+  color: inherit;
+}
+header a:visited {
+  text-decoration: none;
+  color: inherit;
+}
+header > a {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+header > a > img {
+  width: 30px;
+  height: 30px;
+}
+header > a > h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+header > div {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+header > div > button {
+  width: 25px;
+  height: 25px;
+  background-image: var(--theme-bg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-color: inherit;
+  border: none;
+}
+header > div > a {
+  padding: 0px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: var(--login-border);
+}
+header > div > a.login {
+  background-color: var(--login-bg);
+  color: var(--login-color);
+}
+header > div > a.signup {
+  background-color: var(--signup-bg);
+  color: var(--signup-color);
+}
+header > div > a.logout {
+  margin-left: 10px;
+}
