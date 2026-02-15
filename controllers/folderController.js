@@ -3,13 +3,15 @@ import { body, validationResult, matchedData } from "express-validator";
 
 const foldersGet = async (req, res, next) => {
   try {
-    if (!req.user) {
+    if (
+      !req.user ||
+      (req.params.folderId && isNaN(Number(req.params.folderId)))
+    ) {
       res.status(400).redirect("/");
       return;
     }
 
     const errors = req.validationErr | null;
-    console.log();
     const folderId =
       typeof req.params.folderId === "string"
         ? Number(req.params.folderId)
@@ -46,8 +48,11 @@ const foldersGet = async (req, res, next) => {
           },
         },
       });
-      console.log(folder, typeof errors, null, undefined);
-      res.render("folders", { folder: folder, errors: errors });
+      if (!folder) {
+        res.redirect("/");
+        return;
+      }
+      res.render("folders", { folder: folder, files: files, errors: errors });
       return;
     }
     if (req.user && !folderId) {
@@ -66,8 +71,7 @@ const foldersGet = async (req, res, next) => {
           },
         },
       });
-      console.log(folders, errors);
-      res.render("folders", { folders: folders, errors: errors });
+      res.render("folders", { folders: folders, files: files, errors: errors });
       return;
     }
   } catch (err) {
@@ -90,7 +94,7 @@ const validateFolderName = [
         where: {
           userId: req.user.id,
           name: value,
-          parentId: req.params.folderId ? Number(req.params.folderId) : null,
+          parentId: parentId ? Number(req.params.folderId) : null,
         },
       });
       if (folder) {
@@ -107,7 +111,7 @@ const folderPost = [
 
     // checks for validation err
     if (!errors.isEmpty()) {
-      res.locals.validationErr = errors.array();
+      req.session.validationErr = errors.array();
       parentId
         ? res.redirect(`/folders/${parentId}`)
         : res.redirect("/folders");
