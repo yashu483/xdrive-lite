@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%- include('partials/common-files-template') %>
+  <link rel="stylesheet" href="styles/index.css">
   <title>Cloudly</title>
 </head>
 
@@ -12,9 +13,13 @@
   <%- include('header', {currentUser: locals.currentUser ? locals.currentUser : null}) %>
   <div class="main-wrapper">
     <main>
-      <h1>hello</h1>
       <% if(locals.currentUser){ %>
       <h1><%= locals.currentUser.username %></h1>
+      <% }else{ %>
+      <h1 class="homepage-heading">Keep your files safe and private</h1>
+      <p class="homepage-description"><span class="highlight">Cloudly</span> is a simple <span class="highlight">cloud storage</span> ensures no one but you and the people you choose can access your files. You can store all types of <span class="highlight">Images and PDFs</span> in this storage with max size of each file is <span class="highlight">5MB</span>.</p>
+      <a href="/signup" class="homepage-join-btn">Join CLOUDLY for free</a>
+      <p class="login-ref">Already have an account? <a href="/login">Sign In here</a></p>
       <% } %>
     </main>
   </div>

@@ -25,7 +25,7 @@ html[data-theme="light"] {
   --login-color: black;
   --signup-bg: black;
   --signup-color: white;
-  --header-bg: white;
+  --body-bg: rgb(247, 245, 255);
 }
 html[data-theme="dark"] {
   --color-scheme: dark;
@@ -35,7 +35,7 @@ html[data-theme="dark"] {
   --login-color: white;
   --signup-bg: rgb(252, 252, 252);
   --signup-color: black;
-  --header-bg: rgb(26, 31, 37);
+  --body-bg: rgb(26, 31, 37);
 }
 
 :root {
@@ -49,6 +49,13 @@ html[data-theme="dark"] {
   color-scheme: var(--color-scheme);
 }
 
+body {
+  background-color: var(--body-bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--body-bg);
+}
 /* header element styles */
 
 header {
@@ -61,7 +68,7 @@ header {
   padding-bottom: 15px;
   gap: 10px;
   border-bottom: 1px solid rgb(236, 236, 236);
-  background-color: var(--header-bg);
+  box-shadow: 0 2px 2px rgba(18, 28, 28, 0.12);
 }
 
 header a {
@@ -119,4 +126,24 @@ header > div > a.signup {
 }
 header > div > a.logout {
   margin-left: 10px;
+}
+/* main element styles */
+.main-wrapper {
+  padding: 6px;
+  flex: 1;
+  display: flex;
+  box-sizing: border-box;
+}
+
+/* footer element styles */
+footer {
+  padding: 6px;
+  text-align: center;
+  margin-top: auto;
+  border-top: 1px solid rgb(236, 236, 236);
+  box-shadow: 0 -2px 2px rgba(18, 28, 28, 0.12);
+}
+
+footer > p {
+  margin: 0;
 }

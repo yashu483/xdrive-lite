@@ -1,0 +1,71 @@
+html[data-theme="light"] {
+  --heading-color: #372580;
+  --description-color: #333333;
+  --highlight: rgba(255, 235, 59, 0.7);
+}
+html[data-theme="dark"] {
+  --heading-color: #dfd7fc;
+  --description-color: rgb(236, 236, 236);
+  /* --highlight: rgba(84, 248, 55, 0.397); */
+  --highlight: rgb(255, 166, 0);
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.homepage-heading {
+  color: var(--heading-color);
+  text-align: center;
+  margin-top: 50px;
+  padding: 0px 24px;
+}
+
+.homepage-description {
+  padding: 0px 24px;
+  color: var(--description-color);
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+.highlight {
+  position: relative;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.highlight::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  bottom: 0.2em;
+  height: 0.6em;
+  background: var(--highlight);
+  transform: skew(-3deg);
+  z-index: -1;
+  border-radius: 6px;
+  filter: blur(1px);
+}
+
+a.homepage-join-btn {
+  text-decoration: none;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: linear-gradient(to right, #5ca8f5, rgb(158, 126, 244));
+  color: white;
+  padding: 5px 10px;
+  border-radius: 8px;
+  margin: 30px auto;
+}
+a.homepage-join-btn:visited {
+  text-decoration: none;
+}
+
+.login-ref {
+  font-size: 0.9rem;
+  color: var(--description-color);
+}
