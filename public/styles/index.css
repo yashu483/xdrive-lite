@@ -68,3 +68,9 @@ a.homepage-join-btn:visited {
   font-size: 0.9rem;
   color: var(--description-color);
 }
+
+.login-ref > a,
+.login-ref > a:visited {
+  color: #6d4aff;
+  text-decoration: underline 1px #6d4aff;
+}

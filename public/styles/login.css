@@ -1,0 +1,65 @@
+html[data-theme="light"] {
+  --description-color: #333333;
+  --call-color: #776f94;
+}
+html[data-theme="dark"] {
+  --description-color: rgb(236, 236, 236);
+  --call-color: #e4e4e4;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 15px;
+}
+
+h1.login {
+  font-size: 1.8rem;
+}
+p.action-call {
+  color: var(--call-color);
+  margin-top: 0;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 500px;
+  /* align-self: center; */
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+}
+
+form > div > input {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgb(179, 179, 179);
+}
+
+form > button {
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: linear-gradient(to right, #5ca8f5, rgb(158, 126, 244));
+  color: white;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  margin-top: 20px;
+}
+
+p.signup-link {
+  color: var(--description-color);
+  font-size: 0.95rem;
+  margin-top: 25px;
+  text-align: center;
+}
+
+p.signup-link > a,
+p.signup-link > a:visited {
+  color: #6d4aff;
+  text-decoration: underline 1px #6d4aff;
+}
