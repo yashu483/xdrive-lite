@@ -1,6 +1,7 @@
 "use strict";
 
 const fileInput = document.querySelector("#file");
+const fileForm = document.querySelector("#files-form");
 
 fileInput.addEventListener("change", function (e) {
   const maxFiles = 3;
@@ -22,5 +23,8 @@ fileInput.addEventListener("change", function (e) {
       this.value = "";
       return;
     }
+  }
+  if (files.length > 0) {
+    fileForm.requestSubmit();
   }
 });

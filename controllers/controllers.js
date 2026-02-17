@@ -9,11 +9,19 @@ const indexGet = (req, res) => {
   res.render("index");
 };
 
-const loginGet = (req, res, next) => {
+const loginGet = (req, res) => {
+  if (req.user) {
+    res.redirect("/");
+    return;
+  }
   res.render("login");
 };
 
-const signupGet = (req, res, next) => {
+const signupGet = (req, res) => {
+  if (req.user) {
+    res.redirect("/");
+    return;
+  }
   res.render("signup");
 };
 

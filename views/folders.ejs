@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%- include('partials/common-files-template') %>
+  <link rel="stylesheet" href="styles/folders.css">
   <title>Folders | Cloudly</title>
 </head>
 
@@ -13,23 +14,24 @@
   <%- include('header') %>
   <div class="main-wrapper">
     <main>
-      <!-- <a href="/folders/<%= //locals.currentFolder? locals.currentFolder?.parentId  %>"></a> -->
-      if there is no parent then just show name 'Home' other wise show name of parent folder
-      <h1>Home</h1>
-      <% if(locals.errors && locals.errors !== null){ %>
-      <ul>
-        <% locals.errors.forEach((err) => { %>
-        <li><%= err %></li>
-        <% }) %>
-      </ul>
-      <% } %>
+      <div class="main-top-buttons">
+        <div>
+          <!-- <button class="create-buttons upload-file"><span aria-hidden="true"></span>Upload File</button> -->
+          <%- include('partials/files-form', { isInFolder: locals.folder ? true : false, folderId: locals.folder ? locals.folder.id : null}) %>
+          <button class="create-button new-folder"><span aria-hidden="true"></span>New Folder</button>
+        </div>
+        <button class="sort-button" aria-label="Sort Button"></button>
+      </div>
+      <section class="files-container">
+        <h1>Cloudly Drive</h1>
+
+      </section>
+
       <form action="/folders" method="POST">
         <label for="folderName">New Folder</label>
         <input type="text" name="folderName" id="folderName" required>
         <button type="submit">Submit</button>
       </form>
-      <h1>new file</h1>
-      <%- include('partials/files-form', { isInFolder: locals.folder ? true : false, folderId: locals.folder ? locals.folder.id : null}) %>
     </main>
   </div>
   <%- include('footer') %>

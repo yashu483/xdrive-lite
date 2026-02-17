@@ -1,0 +1,84 @@
+html[data-theme="light"] {
+  --upload-bg: black;
+  --upload-color: white;
+  --upload-icon: url("./../icons/upload-20-white.svg");
+  --new-icon: url("./../icons/newfolder-20-black.svg");
+  --sort-icon: url("./../icons/sort-50-black.svg");
+  --new-bg: #6163661a;
+  --new-color: black;
+  --new-border: none;
+}
+html[data-theme="dark"] {
+  --upload-bg: white;
+  --upload-color: black;
+  --upload-icon: url("./../icons/upload-20-black.svg");
+  --new-icon: url("./../icons/newfolder-20-white.svg");
+  --sort-icon: url("./../icons/sort-50-white.svg");
+  --new-bg: black;
+  --new-color: white;
+  --new-border: 1px solid white;
+}
+
+.main-wrapper {
+  padding: 0px 10px;
+}
+.main-top-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0px;
+}
+
+.main-top-buttons > div {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.create-button {
+  display: flex;
+  align-items: flex-start;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 1.3;
+  border: none;
+}
+.create-button.upload-file {
+  color: var(--upload-color);
+  background-color: var(--upload-bg);
+}
+.create-button.new-folder {
+  color: var(--new-color);
+  background-color: var(--new-bg);
+  border: var(--new-border);
+}
+.create-button span {
+  display: inline-block;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-right: 5px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+}
+
+.create-button.upload-file > span {
+  background-image: var(--upload-icon);
+}
+.create-button.new-folder > span {
+  background-image: var(--new-icon);
+}
+
+button.sort-button {
+  align-self: stretch;
+  width: 30px;
+  background-image: var(--sort-icon);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  background-color: inherit;
+  border: none;
+}
