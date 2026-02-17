@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%- include('partials/common-files-template') %>
   <link rel="stylesheet" href="styles/folders.css">
-  <title>Folders | Cloudly</title>
+  <title>Home | Cloudly</title>
 </head>
 
 <body>
@@ -23,16 +23,18 @@
         <button class="sort-button" aria-label="Sort Button"></button>
       </div>
       <section class="files-container">
-        <h1>Cloudly Drive</h1>
-
+        <h1 class="folder-section-heading">Cloudly Drive</h1>
+        <img src="images/cloud.svg" aria-hidden="true" id="cloud-image">
+        <h2 class="drive-empty">Cloudly drive is empty</h2>
+        <p class="empty-message">You haven't added items to your Cloud drive.</p>
       </section>
 
-      <form action="/folders" method="POST">
-        <label for="folderName">New Folder</label>
-        <input type="text" name="folderName" id="folderName" required>
-        <button type="submit">Submit</button>
-      </form>
     </main>
+    <!-- <form action="/folders" method="POST">
+      <label for="folderName">New Folder</label>
+      <input type="text" name="folderName" id="folderName" required>
+      <button type="submit">Submit</button>
+    </form> -->
   </div>
   <%- include('footer') %>
 </body>
