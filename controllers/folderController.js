@@ -1,8 +1,10 @@
 import { prisma } from "./../lib/prisma.js";
 import { body, validationResult, matchedData } from "express-validator";
+import multer from "multer";
 
 const foldersGet = async (req, res, next) => {
   try {
+    // check if user is not logged in OR path id is not a number
     if (
       !req.user ||
       (req.params.folderId && isNaN(Number(req.params.folderId)))
@@ -11,17 +13,15 @@ const foldersGet = async (req, res, next) => {
       return;
     }
 
-    const errors = req.validationErr | null;
+    // gets errors from failed validation redirect from POST req to folders
+    const errors = req.session.validationErr ? req.session.validationErr : null;
+
     const folderId =
       typeof req.params.folderId === "string"
         ? Number(req.params.folderId)
         : null;
 
-    const files = await prisma.files.findMany({
-      where: {
-        folderId: folderId,
-      },
-    });
+    // do this request is for a nested folder
     if (req.user && folderId) {
       const folder = await prisma.folders.findFirst({
         where: {
@@ -49,12 +49,22 @@ const foldersGet = async (req, res, next) => {
         },
       });
       if (!folder) {
-        res.redirect("/");
+        // redirect to folder page because user requested for non-existent folder
+        res.redirect("/folders");
         return;
       }
+      const files = await prisma.files.findMany({
+        where: {
+          folderId: folderId,
+          userId: req.user.id,
+        },
+      });
       res.render("folders", { folder: folder, files: files, errors: errors });
+      if (errors) delete req.session.validationErr;
       return;
     }
+
+    // if there is no folderId, that means request is for home directory
     if (req.user && !folderId) {
       const folders = await prisma.folders.findMany({
         where: {
@@ -67,8 +77,15 @@ const foldersGet = async (req, res, next) => {
           _count: {
             select: {
               files: true,
+              children: true,
             },
           },
+        },
+      });
+      const files = await prisma.files.findMany({
+        where: {
+          folderId: null,
+          userId: req.user.id,
         },
       });
       res.render("folders", { folders: folders, files: files, errors: errors });
@@ -103,39 +120,106 @@ const validateFolderName = [
       return true;
     }),
 ];
+
+const upload = multer({
+  limits: {
+    files: 3,
+    fileSize: 5 * 1024 * 1024,
+  },
+});
+
+const getMulterErrMsg = (code) => {
+  switch (code) {
+    case "LIMIT_FILE_SIZE":
+      {
+        return "File size must be less than 5MB.";
+      }
+      break;
+    case "LIMIT_FILE_COUNT":
+      {
+        return "You can upload maximum 3 files.";
+      }
+      break;
+    default:
+      return "Upload error occurred.";
+  }
+};
+
+const createFolderReq = async (req, res) => {
+  const errors = validationResult(req);
+  const parentId = req.params.folderId;
+
+  // checks for validation err
+  if (!errors.isEmpty()) {
+    req.session.validationErr = errors.array();
+    parentId ? res.redirect(`/folders/${parentId}`) : res.redirect("/folders");
+    return;
+  }
+
+  // if validation succeed
+  const data = matchedData(req);
+  await prisma.folders.create({
+    data: {
+      name: data.folderName,
+      parentId: parentId ? Number(parentId) : null,
+      userId: req.user.id,
+    },
+  });
+  parentId ? res.redirect(`/folders/${parentId}`) : res.redirect("/folders");
+};
+
+const createFilesReq = async (req, res) => {
+  const files = req.files;
+
+  await Promise.all(
+    files.map((file) => {
+      const { originalname, mimetype, size } = file;
+      const url = "mock.com";
+      const userId =
+        typeof req.user.id === "string" ? Number(req.user.id) : req.user.id;
+      return prisma.files.create({
+        data: {
+          name: originalname,
+          mimetype,
+          size,
+          url,
+          userId,
+        },
+      });
+    }),
+  );
+
+  res.redirect("/");
+};
+
 const folderPost = [
   validateFolderName,
   async (req, res) => {
-    const errors = validationResult(req);
-    const parentId = req.params.folderId;
-
-    // checks for validation err
-    if (!errors.isEmpty()) {
-      req.session.validationErr = errors.array();
-      parentId
-        ? res.redirect(`/folders/${parentId}`)
-        : res.redirect("/folders");
-      console.log(errors.array());
+    if (req.body?.folderName !== undefined) {
+      await createFolderReq(req, res);
       return;
     }
-
-    // if validation succeed
-    const data = matchedData(req);
-    await prisma.folders.create({
-      data: {
-        name: data.folderName,
-        parentId: parentId ? Number(parentId) : null,
-        userId: req.user.id,
-      },
+    upload.array("files")(req, res, async (err) => {
+      if (err || req.files.length === 0) {
+        let msg = [];
+        if (err instanceof multer.MulterError) {
+          msg.push(getMulterErrMsg(err.code));
+        } else {
+          msg.push("Something went wrong during upload.");
+        }
+        req.session.multerErr = msg;
+        res.redirect("/folders");
+        return;
+      }
+      await createFilesReq(req, res);
     });
-    parentId ? res.redirect(`/folders/${parentId}`) : res.redirect("/folders");
   },
 ];
 
 const folderDelete = (req, res, next) => {
   res.send("Delete");
 };
-const filesGet = async (req, res, next) => {};
-const filesPost = async (req, res, next) => {};
-const filesDelete = async (req, res, next) => {};
+// const filesGet = async (req, res, next) => {};
+// const filesPost = async (req, res, next) => {};
+// const filesDelete = async (req, res, next) => {};
 export default { foldersGet, folderDelete, folderPost };

@@ -24,11 +24,20 @@
       </div>
       <section class="files-container">
         <h1 class="folder-section-heading">Cloudly Drive</h1>
+        <% if((!locals.folder && (!locals.folders || locals.folders && locals.folders.length === 0)) && (!locals.files ||locals.files && locals.files.length === 0)) { %>
         <img src="images/cloud.svg" aria-hidden="true" id="cloud-image">
         <h2 class="drive-empty">Cloudly drive is empty</h2>
         <p class="empty-message">You haven't added items to your Cloud drive.</p>
+        <% }%>
       </section>
-
+      <%= folders.length%>
+      <%= files.length %>
+      <%=  locals.errors == null %>
+      <%  if(null) { %>
+      <p>null is true</p>
+      <% }else{ %>
+      <p>null is false</p>
+      <% }%>
     </main>
     <!-- <form action="/folders" method="POST">
       <label for="folderName">New Folder</label>
