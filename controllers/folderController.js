@@ -16,13 +16,19 @@ const foldersGet = async (req, res, next) => {
     // gets errors from failed validation redirect from POST req to folders
     const errors = req.session.validationErr ? req.session.validationErr : null;
 
-    const folderId =
-      typeof req.params.folderId === "string"
-        ? Number(req.params.folderId)
-        : null;
+    const folderIdParam = req.params.folderId;
+    const folderId = folderIdParam !== undefined ? Number(folderIdParam) : null;
+    // typeof req.params.folderId === "string"
+    //   ? Number(req.params.folderId)
+    //   : null;
 
     // do this request is for a nested folder
-    if (req.user && folderId) {
+
+    if (folderIdParam !== undefined && isNaN(folderId)) {
+      return res.status(400).redirect("/");
+    }
+
+    if (req.user && folderId !== null) {
       const folder = await prisma.folders.findFirst({
         where: {
           id: folderId,
@@ -74,7 +80,7 @@ const foldersGet = async (req, res, next) => {
           return { ...file, createdAt: formatted };
         }),
       );
-      res.render("folders", {
+      res.status(200).render("folders", {
         folder: folder,
         files: shortenDateArr,
         errors: errors,
@@ -84,7 +90,7 @@ const foldersGet = async (req, res, next) => {
     }
 
     // if there is no folderId, that means request is for home directory
-    if (req.user && !folderId) {
+    if (req.user && folderId == null) {
       const folders = await prisma.folders.findMany({
         where: {
           parentId: null,

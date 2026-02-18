@@ -1,9 +1,9 @@
 <div class="folder-card isFile" id="<%= locals.file.id %>">
   <div>
     <% if(locals.file.mimetype.startsWith('image')){ %>
-    <img src="icons/image.svg" alt="folder icon" aria-hidden="true" class="folder-card-icon">
+    <img src="/icons/image.svg" alt="folder icon" aria-hidden="true" class="folder-card-icon">
     <% }else{ %>
-    <img src="icons/pdf.svg" alt="folder icon" aria-hidden="true" class="folder-card-icon">
+    <img src="/icons/pdf.svg" alt="folder icon" aria-hidden="true" class="folder-card-icon">
     <% } %>
     <div class="folder-card-info">
       <h3 class="folder-name"><%= locals.file.name %></h3>

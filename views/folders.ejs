@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%- include('partials/common-files-template') %>
-  <link rel="stylesheet" href="styles/folders.css">
+  <link rel="stylesheet" href="/styles/folders.css">
   <% if((!locals.folder && (!locals.folders || locals.folders && locals.folders.length === 0)) && (!locals.files ||locals.files && locals.files.length === 0)) { %>
-  <link rel="stylesheet" href="styles/partials/empty-drive.css">
+  <link rel="stylesheet" href="/styles/partials/empty-drive.css">
   <% }else{ %>
-  <link rel="stylesheet" href="styles/partials/no-empty-drive.css">
+  <link rel="stylesheet" href="/styles/partials/no-empty-drive.css">
   <% } %>
   <title>Home | Cloudly</title>
 </head>
@@ -33,7 +33,7 @@
         <h1 class="folder-section-heading">Cloudly Drive</h1>
         <% if((!locals.folder && (!locals.folders || locals.folders && locals.folders.length === 0)) && (!locals.files ||locals.files && locals.files.length === 0)) { %>
         <div class="no-items-container">
-          <img src="images/cloud.svg" aria-hidden="true" id="cloud-image">
+          <img src="/images/cloud.svg" aria-hidden="true" id="cloud-image">
           <h2 class="drive-empty">Cloudly drive is empty</h2>
           <p class="empty-message">You haven't added items to your Cloud drive.</p>
         </div><% } else{ %>
@@ -56,7 +56,7 @@
       </section>
       <div class="overlay" id="overlay" onclick="closeModal()"></div>
       <!-- bottom sheet -->
-      <form class="bottom-sheet" id="bottomSheet" method="POST" action="/folders<%  %>">
+      <form class="bottom-sheet" id="bottomSheet" method="POST" action="/folders<%= locals.folder? `/${locals.folder.id}` : '' %>">
         <div class="sheet-header">
           <label for="folderName">New Folder</label>
           <button type="button" class="close-btn" onclick="closeModal()">x</button>
