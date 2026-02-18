@@ -8,6 +8,9 @@ html[data-theme="light"] {
   --new-color: black;
   --new-border: none;
   --empty-color: gray;
+  --overlay-bg: rgba(0, 0, 0, 0.3);
+  --bottom-sheet-bg: #fff;
+  --sheet-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
 }
 html[data-theme="dark"] {
   --upload-bg: white;
@@ -19,6 +22,9 @@ html[data-theme="dark"] {
   --new-color: white;
   --new-border: 1px solid white;
   --empty-color: rgb(207, 207, 207);
+  --overlay-bg: rgba(65, 65, 65, 0.3);
+  --bottom-sheet-bg: black;
+  --sheet-shadow: 0 -5px 20px rgba(219, 219, 219, 0.2);
 }
 
 .main-wrapper {
@@ -101,4 +107,91 @@ section.files-container {
   font-size: 1.5rem;
   margin-top: 10px;
   align-self: flex-start;
+}
+
+/* new folder form bottom sheet */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+}
+
+/* Bottom Sheet */
+.bottom-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bottom-sheet-bg);
+  padding: 20px;
+  border-radius: 20px 20px 0 0;
+  box-shadow: var(--sheet-shadow);
+  transform: translateY(100%);
+  transition: 0.3s ease;
+}
+
+/* Active state */
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.bottom-sheet.active {
+  transform: translateY(0);
+}
+
+/* Header */
+.sheet-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.sheet-header h3 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.close-btn {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Input */
+#folderName {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* Button */
+.create-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  background: #eee;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.create-btn.enabled {
+  background: var(--new-color);
+  color: var(--bottom-sheet-bg);
+  cursor: pointer;
 }

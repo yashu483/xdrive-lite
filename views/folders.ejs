@@ -16,6 +16,7 @@
 
 <body>
   <script defer src="/scripts/fileValidation.js"></script>
+  <script defer src="/scripts/forms-toggle.js"></script>
   <%- include('header') %>
   <div class="main-wrapper">
     <main>
@@ -23,10 +24,11 @@
         <div>
           <!-- <button class="create-buttons upload-file"><span aria-hidden="true"></span>Upload File</button> -->
           <%- include('partials/files-form', { isInFolder: locals.folder ? true : false, folderId: locals.folder ? locals.folder.id : null}) %>
-          <button class="create-button new-folder"><span aria-hidden="true"></span>New Folder</button>
+          <button class="create-button new-folder" onclick="openModal()"><span aria-hidden="true"></span>New Folder</button>
         </div>
         <button class="sort-button" aria-label="Sort Button"></button>
       </div>
+
       <section class="files-container">
         <h1 class="folder-section-heading">Cloudly Drive</h1>
         <% if((!locals.folder && (!locals.folders || locals.folders && locals.folders.length === 0)) && (!locals.files ||locals.files && locals.files.length === 0)) { %>
@@ -52,12 +54,18 @@
         <% } %>
         <% }%>
       </section>
+      <div class="overlay" id="overlay" onclick="closeModal()"></div>
+      <!-- bottom sheet -->
+      <form class="bottom-sheet" id="bottomSheet" method="POST" action="/folders<%  %>">
+        <div class="sheet-header">
+          <label for="folderName">New Folder</label>
+          <button type="button" class="close-btn" onclick="closeModal()">x</button>
+        </div>
+        <input type="text" id="folderName" name="folderName" required oninput="handleInput()">
+        <button class="create-btn" id="createBtn" disabled type="submit">Create </button>
+      </form>
+
     </main>
-    <!-- <form action="/folders" method="POST">
-      <label for="folderName">New Folder</label>
-      <input type="text" name="folderName" id="folderName" required>
-      <button type="submit">Submit</button>
-    </form> -->
   </div>
   <%- include('footer') %>
 </body>
