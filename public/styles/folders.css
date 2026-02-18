@@ -94,22 +94,11 @@ button.sort-button {
 section.files-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
 }
 
 .folder-section-heading {
   font-size: 1.5rem;
   margin-top: 10px;
   align-self: flex-start;
-}
-
-img#cloud-image {
-  width: 150px;
-}
-h2.drive-empty {
-  font-size: 1.3rem;
-  margin-bottom: 0;
-}
-p.empty-message {
-  color: var(--empty-color);
 }

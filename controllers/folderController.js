@@ -59,7 +59,26 @@ const foldersGet = async (req, res, next) => {
           userId: req.user.id,
         },
       });
-      res.render("folders", { folder: folder, files: files, errors: errors });
+      const shortenDateArr = await Promise.all(
+        files.map((file) => {
+          const date = file.createdAt;
+          const formatted = date.toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+          });
+          return { ...file, createdAt: formatted };
+        }),
+      );
+      res.render("folders", {
+        folder: folder,
+        files: shortenDateArr,
+        errors: errors,
+      });
       if (errors) delete req.session.validationErr;
       return;
     }
@@ -88,7 +107,25 @@ const foldersGet = async (req, res, next) => {
           userId: req.user.id,
         },
       });
-      res.render("folders", { folders: folders, files: files, errors: errors });
+      const shortenDateArr = await Promise.all(
+        files.map((file) => {
+          const date = file.createdAt;
+          const formatted = date.toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          });
+          return { ...file, createdAt: formatted };
+        }),
+      );
+      res.render("folders", {
+        folders: folders,
+        files: shortenDateArr,
+        errors: errors,
+      });
       return;
     }
   } catch (err) {

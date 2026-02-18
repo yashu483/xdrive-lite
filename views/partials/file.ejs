@@ -1,0 +1,14 @@
+<div class="folder-card" id="<%= locals.file.id %>">
+  <div>
+    <% if(locals.file.mimetype.startsWith('image')){ %>
+    <img src="icons/image.svg" alt="folder icon" aria-hidden="true" class="folder-card-icon">
+    <% }else{ %>
+    <img src="icons/pdf.svg" alt="folder icon" aria-hidden="true" class="folder-card-icon">
+    <% } %>
+    <div class="folder-card-info">
+      <h3 class="folder-name"><%= locals.file.name %></h3>
+      <p class="folder-data"><%= file.size < 1000 * 1024 ? `${Math.round(file.size /  1024)} KB` : `${Math.round(file.size / (1024 * 1024))} MB` %>, <%= file.createdAt %></p>
+    </div>
+  </div>
+  <button id="<%= locals.file.id %>" class="options-button" aria-label="folder more options">&hellip;</button>
+</div>

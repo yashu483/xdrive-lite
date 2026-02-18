@@ -1,0 +1,51 @@
+html[data-theme="light"] {
+  --empty-message: gray;
+}
+html[data-theme="dark"] {
+  --empty-message: rgb(207, 207, 207);
+}
+
+div.folder-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 8px;
+  margin: 5px 0px;
+}
+
+.folder-card > div {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.folder-card-icon {
+  width: 1.5rem;
+}
+
+.folder-name,
+.folder-data {
+  margin: 0;
+  padding: 0;
+}
+h3.folder-name {
+  font-size: 1rem;
+  font-weight: 500;
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+p.folder-data {
+  font-size: 0.8rem;
+  color: var(--empty-message);
+}
+
+.options-button {
+  font-size: 1.2rem;
+  font-weight: 700;
+  background-color: inherit;
+  border: none;
+}

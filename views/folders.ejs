@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%- include('partials/common-files-template') %>
   <link rel="stylesheet" href="styles/folders.css">
+  <% if((!locals.folder && (!locals.folders || locals.folders && locals.folders.length === 0)) && (!locals.files ||locals.files && locals.files.length === 0)) { %>
+  <link rel="stylesheet" href="styles/partials/empty-drive.css">
+  <% }else{ %>
+  <link rel="stylesheet" href="styles/partials/no-empty-drive.css">
+  <% } %>
   <title>Home | Cloudly</title>
 </head>
 
@@ -25,19 +30,28 @@
       <section class="files-container">
         <h1 class="folder-section-heading">Cloudly Drive</h1>
         <% if((!locals.folder && (!locals.folders || locals.folders && locals.folders.length === 0)) && (!locals.files ||locals.files && locals.files.length === 0)) { %>
-        <img src="images/cloud.svg" aria-hidden="true" id="cloud-image">
-        <h2 class="drive-empty">Cloudly drive is empty</h2>
-        <p class="empty-message">You haven't added items to your Cloud drive.</p>
+        <div class="no-items-container">
+          <img src="images/cloud.svg" aria-hidden="true" id="cloud-image">
+          <h2 class="drive-empty">Cloudly drive is empty</h2>
+          <p class="empty-message">You haven't added items to your Cloud drive.</p>
+        </div><% } else{ %>
+        <% if(locals.folder && locals.folder.children?.length !== 0){ %>
+        <% locals.folder.children.forEach((childFolder) =>{ %>
+        <%- include('partials/folder', {folder:childFolder}) %>
+        <%  } ) %>
+        <% } %>
+        <% if(locals.folders && locals.folders.length !==0 ){ %>
+        <% locals.folders.forEach((childFolder) =>{ %>
+        <%- include('partials/folder', {folder:childFolder}) %>
+        <%  } ) %>
+        <% } %>
+        <% if(locals.files && locals.files.length !==0 ){ %>
+        <% locals.files.forEach((childFile) =>{ %>
+        <%- include('partials/file', {file:childFile}) %>
+        <%  } ) %>
+        <% } %>
         <% }%>
       </section>
-      <%= folders.length%>
-      <%= files.length %>
-      <%=  locals.errors == null %>
-      <%  if(null) { %>
-      <p>null is true</p>
-      <% }else{ %>
-      <p>null is false</p>
-      <% }%>
     </main>
     <!-- <form action="/folders" method="POST">
       <label for="folderName">New Folder</label>
