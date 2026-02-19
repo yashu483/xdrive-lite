@@ -20,6 +20,7 @@ main {
   text-align: center;
   margin-top: 50px;
   padding: 0px 24px;
+  font-size: 2.5rem;
 }
 
 .homepage-description {
@@ -73,4 +74,27 @@ a.homepage-join-btn:visited {
 .login-ref > a:visited {
   color: #6d4aff;
   text-decoration: underline 1px #6d4aff;
+}
+
+@media screen and (min-width: 768px) {
+  .homepage-heading {
+    font-size: 2.7rem;
+  }
+  a.homepage-join-btn {
+    font-size: 1.2rem;
+    min-width: 300px;
+  }
+  a.login-ref {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (min-width: 1279px) {
+  .homepage-heading {
+    margin-top: 100px;
+  }
+
+  a.homepage-join-btn {
+    font-size: 1.3rem;
+  }
 }

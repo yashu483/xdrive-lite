@@ -14,8 +14,8 @@ main {
   padding: 0 15px;
 }
 
-h1.login {
-  font-size: 1.8rem;
+h1.heading {
+  font-size: 2.3rem;
 }
 p.action-call {
   color: var(--call-color);
@@ -62,4 +62,28 @@ p.login-link > a,
 p.login-link > a:visited {
   color: #6d4aff;
   text-decoration: underline 1px #6d4aff;
+}
+
+@media screen and (min-width: 500px) {
+  form {
+    min-width: 500px;
+  }
+  main {
+    display: grid;
+    grid-template-columns: 500px;
+    grid-auto-rows: max-content;
+    justify-content: center;
+  }
+  h1.heading {
+    margin-top: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  h1.heading {
+    margin-top: 60px;
+  }
+  p.login-link {
+    font-size: 1rem;
+  }
 }

@@ -141,8 +141,10 @@ section.files-container {
   visibility: visible;
 }
 
-.bottom-sheet.active {
-  transform: translateY(0);
+@media screen and (max-width: 768px) {
+  .bottom-sheet.active {
+    transform: translateY(0);
+  }
 }
 
 /* Header */
@@ -155,7 +157,7 @@ section.files-container {
 
 .sheet-header h3 {
   margin: 0;
-  font-weight: 600;
+  font-weight: 900;
 }
 
 .close-btn {
@@ -169,7 +171,7 @@ section.files-container {
 
 /* Input */
 #folderName {
-  width: 100%;
+  width: 95%;
   margin-top: 20px;
   padding: 12px;
   border-radius: 8px;
@@ -194,4 +196,48 @@ section.files-container {
   background: var(--new-color);
   color: var(--bottom-sheet-bg);
   cursor: pointer;
+}
+
+@media screen and (min-width: 550px) {
+  main {
+    padding: 0px 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .create-button {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  .main-top-buttons > div {
+    gap: 30px;
+  }
+  .create-button span {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .bottom-sheet {
+    /* position: fixed; */
+    display: none;
+    top: 50%;
+    left: 50%;
+    bottom: auto;
+    right: auto;
+    width: 500px;
+    transform: translate(-50%, -50%);
+    border-radius: 8px;
+  }
+  .bottom-sheet.active {
+    display: block !important;
+  }
+  .bottom-sheet.not-active {
+    display: none !important;
+  }
+  .close-btn {
+    font-size: 1.5rem;
+  }
+  .sheet-header h3 {
+    font-size: 1.2rem;
+  }
 }

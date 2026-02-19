@@ -49,3 +49,39 @@ p.folder-data {
   background-color: inherit;
   border: none;
 }
+
+@media screen and (min-width: 550px) {
+  div.folder-card {
+    border-radius: 8px;
+    background: linear-gradient(
+      to right,
+      rgb(92, 168, 245, 0.2),
+      rgb(158, 126, 244, 0.2)
+    );
+  }
+}
+
+@media screen and (min-width: 768px) {
+  div.folder-card {
+    border-radius: 8px;
+    background: linear-gradient(
+      to right,
+      rgb(92, 168, 245, 0.2),
+      rgb(158, 126, 244, 0.2)
+    );
+  }
+  h3.folder-name {
+    font-size: 1.1rem;
+    max-width: 450px;
+  }
+  p.folder-data {
+    font-size: 0.85rem;
+  }
+
+  .folder-card-icon {
+    width: 1.7rem;
+  }
+  .options-button {
+    font-size: 1.4rem;
+  }
+}

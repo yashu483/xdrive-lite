@@ -61,9 +61,17 @@ body {
 /* header element styles */
 
 header {
+  display: flex;
+  justify-content: center;
   position: sticky;
   top: 0;
   z-index: 99;
+  border-bottom: 1px solid rgb(236, 236, 236);
+  box-shadow: 0 2px 2px rgba(18, 28, 28, 0.12);
+  background-color: var(--signup-color);
+}
+header > div {
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -71,11 +79,7 @@ header {
   padding: 15px;
   padding-bottom: 15px;
   gap: 10px;
-  border-bottom: 1px solid rgb(236, 236, 236);
-  box-shadow: 0 2px 2px rgba(18, 28, 28, 0.12);
-  background-color: var(--signup-color);
 }
-
 header a {
   text-decoration: none;
   color: inherit;
@@ -84,28 +88,28 @@ header a:visited {
   text-decoration: none;
   color: inherit;
 }
-header > a {
+header > div > a {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-header > a > img {
+header > div > a > img {
   width: 30px;
   height: 30px;
 }
-header > a > h1 {
+header > div > a > h1 {
   margin: 0;
   font-size: 1.5rem;
 }
 
-header > div {
+header > div div {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-header > div > button {
+header > div > div > button {
   width: 25px;
   height: 25px;
   background-image: var(--theme-bg);
@@ -115,21 +119,21 @@ header > div > button {
   background-color: inherit;
   border: none;
 }
-header > div > a {
+header > div > div > a {
   padding: 0px 8px;
   border-radius: 8px;
   font-weight: 600;
   border: var(--login-border);
 }
-header > div > a.login {
+header > div > div > a.login {
   background-color: var(--login-bg);
   color: var(--login-color);
 }
-header > div > a.signup {
+header > div > div > a.signup {
   background-color: var(--signup-bg);
   color: var(--signup-color);
 }
-header > div > a.logout {
+header > div > div > a.logout {
   margin-left: 10px;
 }
 /* main element styles */
@@ -153,4 +157,39 @@ footer > p {
   margin: 0;
   color: var(--description-color);
   font-size: 0.9rem;
+}
+
+@media screen and (min-width: 768px) {
+  .header-wrapper {
+    max-width: 800px;
+  }
+  .main-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  main {
+    max-width: 700px;
+    padding: 0 20px;
+  }
+
+  header > div > a > img {
+    width: 40px;
+    height: 40px;
+  }
+  header > div > a > h1 {
+    margin: 0;
+    font-size: 2rem;
+  }
+  header > div > div {
+    gap: 20px;
+  }
+  header > div > div > a {
+    font-size: 1.2rem;
+  }
+
+  header > div > div > button {
+    width: 30px;
+    height: 30px;
+  }
 }

@@ -1,9 +1,6 @@
 <!-- isInFolder indicates if file is in nested folder or in root folder -->
 
 <% if(isInFolder){ %>
-  <p>now this is not good. <%= locals.folderId %>
-      <%= `/folders/${locals.folderId}` %>
-  </p>
   <form id="files-form" action="<%= `/folders/${locals.folderId}` %>" enctype="multipart/form-data" method="POST">
     <label for="file" class="create-button upload-file"><span aria-hidden="true"></span>Upload</label>
     <input type="file" name="files" id="file" required multiple accept="image/*, application/pdf" style="display:none;">

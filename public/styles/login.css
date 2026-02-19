@@ -26,7 +26,6 @@ form {
   flex-direction: column;
   gap: 10px;
   max-width: 500px;
-  /* align-self: center; */
 }
 
 form > div {
@@ -62,4 +61,21 @@ p.signup-link > a,
 p.signup-link > a:visited {
   color: #6d4aff;
   text-decoration: underline 1px #6d4aff;
+}
+@media screen and (min-width: 550px) {
+  form {
+    min-width: 500px;
+  }
+  main {
+    display: grid;
+    grid-template-columns: 500px;
+    grid-auto-rows: max-content;
+    justify-content: center;
+  }
+}
+
+@media screen and (min-width: 786px) {
+  h1.login {
+    margin-top: 80px;
+  }
 }

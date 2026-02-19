@@ -4,13 +4,17 @@ const input = document.getElementById("folderName");
 const createBtn = document.getElementById("createBtn");
 
 function openModal() {
+  bottomSheet.classList.remove("not-active");
   overlay.classList.add("active");
   bottomSheet.classList.add("active");
+  // bottomSheet.style.display = "block";
 }
 
 function closeModal() {
   overlay.classList.remove("active");
+  // bottomSheet.style.display = "none";
   bottomSheet.classList.remove("active");
+  bottomSheet.classList.add("not-active");
   bottomSheet.addEventListener("submit", (e) => {
     bottomSheet.requestSubmit();
   });
