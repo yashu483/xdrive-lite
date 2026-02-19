@@ -13,22 +13,18 @@ const foldersGet = async (req, res, next) => {
       return;
     }
 
-    // gets errors from failed validation redirect from POST req to folders
+    // gets errors from failed validation redirected from POST req to folders
     const errors = req.session.validationErr ? req.session.validationErr : null;
 
     const folderIdParam = req.params.folderId;
     const folderId = folderIdParam !== undefined ? Number(folderIdParam) : null;
-    // typeof req.params.folderId === "string"
-    //   ? Number(req.params.folderId)
-    //   : null;
-
-    // do this request is for a nested folder
 
     if (folderIdParam !== undefined && isNaN(folderId)) {
       return res.status(400).redirect("/");
     }
 
-    if (req.user && folderId !== null) {
+    // if there is folderId, that means request is for a nested directory
+    if (req.user && folderId != null) {
       const folder = await prisma.folders.findFirst({
         where: {
           id: folderId,
@@ -39,6 +35,12 @@ const foldersGet = async (req, res, next) => {
             select: {
               id: true,
               name: true,
+              _count: {
+                select: {
+                  files: true,
+                  children: true,
+                },
+              },
             },
           },
           parent: {
@@ -47,13 +49,21 @@ const foldersGet = async (req, res, next) => {
               name: true,
             },
           },
+          files: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
           _count: {
             select: {
               files: true,
+              children: true,
             },
           },
         },
       });
+
       if (!folder) {
         // redirect to folder page because user requested for non-existent folder
         res.redirect("/folders");
@@ -262,7 +272,7 @@ const folderPost = [
 const folderDelete = (req, res, next) => {
   res.send("Delete");
 };
-// const filesGet = async (req, res, next) => {};
-// const filesPost = async (req, res, next) => {};
-// const filesDelete = async (req, res, next) => {};
+// TODO:const filesGet = async (req, res, next) => {};
+// TODO:const filesPost = async (req, res, next) => {};
+// TODO:const filesDelete = async (req, res, next) => {};
 export default { foldersGet, folderDelete, folderPost };

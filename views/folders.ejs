@@ -5,69 +5,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%- include('partials/common-files-template') %>
-  <link rel="stylesheet" href="/styles/folders.css">
-  <% if((!locals.folder && (!locals.folders || locals.folders && locals.folders.length === 0)) && (!locals.files ||locals.files && locals.files.length === 0)) { %>
-  <link rel="stylesheet" href="/styles/partials/empty-drive.css">
-  <% }else{ %>
-  <link rel="stylesheet" href="/styles/partials/no-empty-drive.css">
-  <% } %>
-  <title>Home | Cloudly</title>
+    <link rel="stylesheet" href="/styles/folders.css">
+    <% if(((!locals.folder || (locals.folder && locals.folder?._count.children===0 && locals.folder?._count.files===0))
+      && (!locals.folders || locals.folders && locals.folders.length===0)) && (!locals.files ||locals.files &&
+      locals.files.length===0)) { %>
+      <link rel="stylesheet" href="/styles/partials/empty-drive.css">
+      <% }else{ %>
+        <link rel="stylesheet" href="/styles/partials/no-empty-drive.css">
+        <% } %>
+          <title>Home | Cloudly</title>
 </head>
 
 <body>
   <script defer src="/scripts/fileValidation.js"></script>
   <script defer src="/scripts/forms-toggle.js"></script>
   <%- include('header') %>
-  <div class="main-wrapper">
-    <main>
-      <div class="main-top-buttons">
-        <div>
-          <!-- <button class="create-buttons upload-file"><span aria-hidden="true"></span>Upload File</button> -->
-          <%- include('partials/files-form', { isInFolder: locals.folder ? true : false, folderId: locals.folder ? locals.folder.id : null}) %>
-          <button class="create-button new-folder" onclick="openModal()"><span aria-hidden="true"></span>New Folder</button>
+    <div class="main-wrapper">
+      <main>
+        <div class="main-top-buttons">
+          <div>
+            <!-- <button class="create-buttons upload-file"><span aria-hidden="true"></span>Upload File</button> -->
+            <%- include('partials/files-form', { isInFolder: locals.folder ? true : false, folderId: locals.folder ?
+              locals.folder.id : null}) %>
+              <button class="create-button new-folder" onclick="openModal()"><span aria-hidden="true"></span>New
+                Folder</button>
+          </div>
+          <button class="sort-button" aria-label="Sort Button"></button>
         </div>
-        <button class="sort-button" aria-label="Sort Button"></button>
-      </div>
 
-      <section class="files-container">
-        <h1 class="folder-section-heading">Cloudly Drive</h1>
-        <% if((!locals.folder && (!locals.folders || locals.folders && locals.folders.length === 0)) && (!locals.files ||locals.files && locals.files.length === 0)) { %>
-        <div class="no-items-container">
-          <img src="/images/cloud.svg" aria-hidden="true" id="cloud-image">
-          <h2 class="drive-empty">Cloudly drive is empty</h2>
-          <p class="empty-message">You haven't added items to your Cloud drive.</p>
-        </div><% } else{ %>
-        <% if(locals.folder && locals.folder.children?.length !== 0){ %>
-        <% locals.folder.children.forEach((childFolder) =>{ %>
-        <%- include('partials/folder', {folder:childFolder}) %>
-        <%  } ) %>
-        <% } %>
-        <% if(locals.folders && locals.folders.length !==0 ){ %>
-        <% locals.folders.forEach((childFolder) =>{ %>
-        <%- include('partials/folder', {folder:childFolder}) %>
-        <%  } ) %>
-        <% } %>
-        <% if(locals.files && locals.files.length !==0 ){ %>
-        <% locals.files.forEach((childFile) =>{ %>
-        <%- include('partials/file', {file:childFile}) %>
-        <%  } ) %>
-        <% } %>
-        <% }%>
-      </section>
-      <div class="overlay" id="overlay" onclick="closeModal()"></div>
-      <!-- bottom sheet -->
-      <form class="bottom-sheet" id="bottomSheet" method="POST" action="/folders<%= locals.folder? `/${locals.folder.id}` : '' %>">
-        <div class="sheet-header">
-          <label for="folderName">New Folder</label>
-          <button type="button" class="close-btn" onclick="closeModal()">x</button>
-        </div>
-        <input type="text" id="folderName" name="folderName" required oninput="handleInput()">
-        <button class="create-btn" id="createBtn" disabled type="submit">Create </button>
-      </form>
+        <section class="files-container">
+          <h1 class="folder-section-heading">
 
-    </main>
-  </div>
-  <%- include('footer') %>
+            Cloudly Drive
+          </h1>
+          <% if(((!locals.folder || (locals.folder?._count.children===0 && locals.folder?._count.files===0)) &&
+            (!locals.folders || locals.folders && locals.folders.length===0)) && (!locals.files ||locals.files &&
+            locals.files.length===0)) { %>
+            <div class="no-items-container">
+              <img src="/images/cloud.svg" aria-hidden="true" id="cloud-image">
+              <h2 class="drive-empty">Cloudly drive is empty</h2>
+              <p class="empty-message">You haven't added items to your Cloud drive.</p>
+            </div>
+            <% } else{ %>
+              <% if(locals.folder && locals.folder.children?.length !==0){ %>
+                <% locals.folder.children.forEach((childFolder)=>{ %>
+                  <%- include('partials/folder', {folder:childFolder}) %>
+                    <% } ) %>
+                      <% } %>
+                        <% if(locals.folders && locals.folders.length !==0 ){ %>
+                          <% locals.folders.forEach((childFolder)=>{ %>
+                            <%- include('partials/folder', {folder:childFolder}) %>
+                              <% } ) %>
+                                <% } %>
+                                  <% if(locals.files && locals.files.length !==0 ){ %>
+                                    <% locals.files.forEach((childFile)=>{ %>
+                                      <%- include('partials/file', {file:childFile}) %>
+                                        <% } ) %>
+                                          <% } %>
+                                            <% }%>
+        </section>
+        <div class="overlay" id="overlay" onclick="closeModal()"></div>
+        <!-- bottom sheet -->
+        <form class="bottom-sheet" id="bottomSheet" method="POST"
+          action="/folders<%= locals.folder? `/${locals.folder.id}` : '' %>">
+          <div class="sheet-header">
+            <label for="folderName">New Folder</label>
+            <button type="button" class="close-btn" onclick="closeModal()">x</button>
+          </div>
+          <input type="text" id="folderName" name="folderName" required oninput="handleInput()">
+          <button class="create-btn" id="createBtn" disabled type="submit">Create </button>
+        </form>
+
+      </main>
+    </div>
+    <%- include('footer') %>
 </body>
 
 </html>
