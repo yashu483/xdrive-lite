@@ -223,13 +223,15 @@ const createFolderReq = async (req, res) => {
 
 const createFilesReq = async (req, res) => {
   const files = req.files;
+  const userId =
+    typeof req.user.id === "string" ? Number(req.user.id) : req.user.id;
+
+  const folderId = req.params.folderId ? Number(req.params.folderId) : null;
 
   await Promise.all(
     files.map((file) => {
       const { originalname, mimetype, size } = file;
       const url = "mock.com";
-      const userId =
-        typeof req.user.id === "string" ? Number(req.user.id) : req.user.id;
       return prisma.files.create({
         data: {
           name: originalname,
@@ -237,12 +239,14 @@ const createFilesReq = async (req, res) => {
           size,
           url,
           userId,
+          folderId,
         },
       });
     }),
   );
-
-  res.redirect("/");
+  if (req.params.folderId)
+    return res.redirect(`/folders/${req.params.folderId}`);
+  res.redirect("/folders");
 };
 
 const folderPost = [
@@ -261,6 +265,10 @@ const folderPost = [
           msg.push("Something went wrong during upload.");
         }
         req.session.multerErr = msg;
+        if (req.params.folderId) {
+          res.redirect(`/folders/${req.params.folderId}`);
+          return;
+        }
         res.redirect("/folders");
         return;
       }
