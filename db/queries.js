@@ -140,7 +140,17 @@ const getFileData = async (id, userId, folderId) => {
   });
   return fileData;
 };
+
 // Delete queries
+const deleteFile = async (id, userId, folderId) => {
+  await prisma.files.delete({
+    where: {
+      id,
+      folderId,
+      userId,
+    },
+  });
+};
 
 export default {
   createFolder,
@@ -151,4 +161,5 @@ export default {
   getFilesByFolderId,
   getFilesForUser,
   getFileData,
+  deleteFile
 };

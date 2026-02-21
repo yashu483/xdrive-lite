@@ -1,4 +1,5 @@
 import db from "./../db/queries.js";
+import { Prisma } from "../generated/prisma/client.js";
 import { body, validationResult, matchedData } from "express-validator";
 import multer from "multer";
 
@@ -203,8 +204,28 @@ const folderPost = [
 ];
 
 // delete action controller
-const folderDelete = (req, res, next) => {
-  res.send("Delete");
+const folderDelete = async (req, res, next) => {
+  try {
+    const { category, itemId } = req.params;
+    const folderId =
+      req.params.folderId === "null" ? null : Number(req.params.folderId);
+
+    if (category === "file") {
+      await db.deleteFile(Number(itemId), req.user.id, folderId);
+      if (folderId === null) return res.status(200).redirect("/folders");
+      else {
+        return res.status(200).render(`/folders/${folderId}`);
+      }
+    } else if (category === "folder") {
+    } else {
+      res.status(400).redirect("/folders");
+    }
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      return res.status(400).json(err.message);
+    }
+    next(err);
+  }
 };
 
 // download action controller
