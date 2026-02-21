@@ -1,14 +1,23 @@
 <div class="folder-card isFolder" id="<%= locals.folder.id %>">
-  <div>
+  <div class="folder-info-section">
     <img src="/icons/folder.svg" alt="folder icon" aria-hidden="true" class="folder-card-icon">
     <div class="folder-card-info">
-      <h3 class="folder-name"><%= locals.folder.name %></h3>
-      <% if(locals.folder._count.files === 0 && locals.folder._count.children === 0){ %>
-      <p class="folder-data">Empty Folder</p>
-      <% }else{ %>
-      <p class="folder-data"><%= locals.folder._count.files %> files, <%= locals.folder._count.children %> folders</p>
-      <% } %>
+      <h3 class="folder-name">
+        <%= locals.folder.name %>
+      </h3>
+      <% if(locals.folder._count.files===0 && locals.folder._count.children===0){ %>
+        <p class="folder-data">Empty Folder</p>
+        <% }else{ %>
+          <p class="folder-data">
+            <%= locals.folder._count.files %> files, <%= locals.folder._count.children %> folders
+          </p>
+          <% } %>
     </div>
   </div>
-  <button id="<%= locals.folder.id %>" class="options-button" aria-label="folder more options">&hellip;</button>
+  <div class="folder-menu-section">
+    <button id="<%= locals.folder.id %>" class="options-button" aria-label="folder more options">&hellip;</button>
+    <div class="card-menu-options"><a href="/folders/delete/folder/<%= locals.folder.id %>"
+        class="link-delete delete">Delete</a>
+    </div>
+  </div>
 </div>

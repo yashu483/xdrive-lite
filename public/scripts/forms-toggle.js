@@ -7,22 +7,17 @@ function openModal() {
   bottomSheet.classList.remove("not-active");
   overlay.classList.add("active");
   bottomSheet.classList.add("active");
-  // bottomSheet.style.display = "block";
 }
 
 function closeModal() {
   overlay.classList.remove("active");
-  // bottomSheet.style.display = "none";
   bottomSheet.classList.remove("active");
   bottomSheet.classList.add("not-active");
   bottomSheet.addEventListener("submit", (e) => {
     bottomSheet.requestSubmit();
   });
 }
-// createBtn.addEventListener("click", (e) => {
-//   e.preventDefault();
-//   bottomSheet.requestSubmit();
-// });
+
 function handleInput() {
   if (input.value.trim().length > 0) {
     createBtn.disabled = false;
@@ -32,3 +27,28 @@ function handleInput() {
     createBtn.classList.remove("enabled");
   }
 }
+
+// folder card options button toggle
+
+const optionBtn = document.querySelectorAll(".options-button");
+const folderOptions = document.querySelectorAll(".card-menu-options");
+
+let selectedFolderIndex = 0;
+
+const closeOptionsMenu = () => {
+  folderOptions.forEach((btn) => {
+    btn.classList.remove("open");
+  });
+};
+
+optionBtn.forEach((button, index) => {
+  button.addEventListener("click", (e) => {
+    e.stopPropagation();
+    folderOptions[selectedFolderIndex].classList.remove("open");
+    folderOptions[index].classList.toggle("open");
+    selectedFolderIndex = index;
+  });
+});
+
+document.addEventListener("click", closeOptionsMenu);
+document.addEventListener("touchstart", closeOptionsMenu);

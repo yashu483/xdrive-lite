@@ -1,8 +1,12 @@
 html[data-theme="light"] {
   --empty-message: gray;
+  --white-black: white;
+  --black-white: black;
 }
 html[data-theme="dark"] {
   --empty-message: rgb(207, 207, 207);
+  --white-black: black;
+  --black-white: white;
 }
 
 div.folder-card {
@@ -12,9 +16,10 @@ div.folder-card {
   gap: 8px;
   padding: 5px 8px;
   margin: 5px 0px;
+  position: relative;
 }
 
-.folder-card > div {
+.folder-card > div.folder-info-section {
   display: flex;
   gap: 20px;
   align-items: center;
@@ -43,13 +48,78 @@ p.folder-data {
   color: var(--empty-message);
 }
 
+/* Kebab button CSS */
+
 .options-button {
   font-size: 1.2rem;
   font-weight: 700;
   background-color: inherit;
   border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 8px;
 }
 
+.card-menu-options {
+  position: absolute;
+  top: 36px;
+  right: 8px;
+  background: var(--white-black);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  min-width: 120px;
+  padding: 12px 16px;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.card-menu-options.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.card-menu-options a {
+  display: block;
+  width: 100%;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.card-menu-options a:visited {
+  text-decoration: none;
+}
+.delete {
+  color: red;
+  font-weight: 600;
+}
+
+.delete:visited {
+  color: red;
+}
+
+.file-download {
+  margin-top: 10px;
+  color: var(--black-white);
+}
+.file-download:visited {
+  color: var(--black-white);
+}
+
+@media (max-width: 480px) {
+  .card-menu-options {
+    right: 0;
+    left: auto;
+    min-width: 160px;
+  }
+}
 @media screen and (min-width: 550px) {
   div.folder-card {
     border-radius: 8px;
