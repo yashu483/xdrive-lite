@@ -1,4 +1,4 @@
-import { prisma } from "./../lib/prisma.js";
+import db from "./../db/queries.js";
 import { body, validationResult, matchedData } from "express-validator";
 import multer from "multer";
 
@@ -25,56 +25,14 @@ const foldersGet = async (req, res, next) => {
 
     // if there is folderId, that means request is for a nested directory
     if (req.user && folderId != null) {
-      const folder = await prisma.folders.findFirst({
-        where: {
-          id: folderId,
-          userId: req.user.id,
-        },
-        include: {
-          children: {
-            select: {
-              id: true,
-              name: true,
-              _count: {
-                select: {
-                  files: true,
-                  children: true,
-                },
-              },
-            },
-          },
-          parent: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          files: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          _count: {
-            select: {
-              files: true,
-              children: true,
-            },
-          },
-        },
-      });
-
+      const folder = await db.getFolderByFolderId(folderId, req.user.id);
       if (!folder) {
         // redirect to folder page because user requested for non-existent folder
         res.redirect("/folders");
         return;
       }
-      const files = await prisma.files.findMany({
-        where: {
-          folderId: folderId,
-          userId: req.user.id,
-        },
-      });
+
+      const files = await db.getFilesByFolderId(folderId, req.user.id);
       const shortenDateArr = await Promise.all(
         files.map((file) => {
           const date = file.createdAt;
@@ -101,28 +59,9 @@ const foldersGet = async (req, res, next) => {
 
     // if there is no folderId, that means request is for home directory
     if (req.user && folderId == null) {
-      const folders = await prisma.folders.findMany({
-        where: {
-          parentId: null,
-          userId: req.user.id,
-        },
-        select: {
-          name: true,
-          id: true,
-          _count: {
-            select: {
-              files: true,
-              children: true,
-            },
-          },
-        },
-      });
-      const files = await prisma.files.findMany({
-        where: {
-          folderId: null,
-          userId: req.user.id,
-        },
-      });
+      const folders = await db.getFoldersForUser(req.user.id);
+      const files = await db.getFilesForUser(req.user.id);
+
       const shortenDateArr = await Promise.all(
         files.map((file) => {
           const date = file.createdAt;
@@ -160,14 +99,13 @@ const validateFolderName = [
         typeof req.params.folderId === "string"
           ? Number(req.params.folderId)
           : null;
-      const folder = await prisma.folders.findFirst({
-        where: {
-          userId: req.user.id,
-          name: value,
-          parentId: parentId ? Number(req.params.folderId) : null,
-        },
-      });
-      if (folder) {
+      const folderAvailable = await db.checkFolderNameAvailability(
+        req.user.id,
+        value,
+        parentId,
+      );
+
+      if (folderAvailable) {
         throw new Error("Folder name already exists.");
       }
       return true;
@@ -198,9 +136,10 @@ const getMulterErrMsg = (code) => {
   }
 };
 
+// utility function
 const createFolderReq = async (req, res) => {
   const errors = validationResult(req);
-  const parentId = req.params.folderId;
+  const parentId = req.params.folderId ? Number(req.params.folderId) : null;
 
   // checks for validation err
   if (!errors.isEmpty()) {
@@ -211,16 +150,12 @@ const createFolderReq = async (req, res) => {
 
   // if validation succeed
   const data = matchedData(req);
-  await prisma.folders.create({
-    data: {
-      name: data.folderName,
-      parentId: parentId ? Number(parentId) : null,
-      userId: req.user.id,
-    },
-  });
+  await db.createFolder(data.folderName, parentId, req.user.id);
+
   parentId ? res.redirect(`/folders/${parentId}`) : res.redirect("/folders");
 };
 
+// utility function
 const createFilesReq = async (req, res) => {
   const files = req.files;
   const userId =
@@ -228,22 +163,8 @@ const createFilesReq = async (req, res) => {
 
   const folderId = req.params.folderId ? Number(req.params.folderId) : null;
 
-  await Promise.all(
-    files.map((file) => {
-      const { originalname, mimetype, size } = file;
-      const url = "mock.com";
-      return prisma.files.create({
-        data: {
-          name: originalname,
-          mimetype,
-          size,
-          url,
-          userId,
-          folderId,
-        },
-      });
-    }),
-  );
+  await db.storeFilesData(files, folderId, req.user.id);
+
   if (req.params.folderId)
     return res.redirect(`/folders/${req.params.folderId}`);
   res.redirect("/folders");
@@ -251,29 +172,33 @@ const createFilesReq = async (req, res) => {
 
 const folderPost = [
   validateFolderName,
-  async (req, res) => {
-    if (req.body?.folderName !== undefined) {
-      await createFolderReq(req, res);
-      return;
-    }
-    upload.array("files")(req, res, async (err) => {
-      if (err || req.files.length === 0) {
-        let msg = [];
-        if (err instanceof multer.MulterError) {
-          msg.push(getMulterErrMsg(err.code));
-        } else {
-          msg.push("Something went wrong during upload.");
-        }
-        req.session.multerErr = msg;
-        if (req.params.folderId) {
-          res.redirect(`/folders/${req.params.folderId}`);
-          return;
-        }
-        res.redirect("/folders");
+  async (req, res, next) => {
+    try {
+      if (req.body?.folderName !== undefined) {
+        await createFolderReq(req, res);
         return;
       }
-      await createFilesReq(req, res);
-    });
+      upload.array("files")(req, res, async (err) => {
+        if (err || req.files.length === 0) {
+          let msg = [];
+          if (err instanceof multer.MulterError) {
+            msg.push(getMulterErrMsg(err.code));
+          } else {
+            msg.push("Something went wrong during upload.");
+          }
+          req.session.multerErr = msg;
+          if (req.params.folderId) {
+            res.redirect(`/folders/${req.params.folderId}`);
+            return;
+          }
+          res.redirect("/folders");
+          return;
+        }
+        await createFilesReq(req, res);
+      });
+    } catch (err) {
+      next(err);
+    }
   },
 ];
 
@@ -306,23 +231,12 @@ const downloadGet = async (req, res, next) => {
     if (isNaN(fileId) || isNaN(folderId))
       return res.status(403).send("Forbidden. Wrong url for resources.");
 
-    const fileData = await prisma.files.findFirst({
-      where: {
-        id: fileId,
-        userId,
-        folderId,
-      },
-      select: {
-        id: true,
-        name: true,
-        url: true,
-      },
-    });
+    const fileData = await db.getFileData(fileId, userId, folderId);
 
     if (!fileData)
       return res.status(403).send("Forbidden. Wrong url for resources.");
 
-    // file fetching and letting user download logic
+    // todo:file fetching and letting user download logic
     res.status(200).json(fileData);
   } catch (err) {
     next(err);
