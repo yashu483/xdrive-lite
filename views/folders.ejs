@@ -59,7 +59,8 @@
                                 <% } %>
                                   <% if(locals.files && locals.files.length !==0 ){ %>
                                     <% locals.files.forEach((childFile)=>{ %>
-                                      <%- include('partials/file', {file:childFile}) %>
+                                      <%- include('partials/file', {file:childFile, folder: locals.folder ?
+                                        locals.folder.id: null}) %>
                                         <% } ) %>
                                           <% } %>
                                             <% }%>

@@ -277,10 +277,59 @@ const folderPost = [
   },
 ];
 
+// delete action controller
 const folderDelete = (req, res, next) => {
   res.send("Delete");
 };
+
+// download action controller
+const downloadGet = async (req, res, next) => {
+  try {
+    if (!req.user)
+      return res.status(403).send("Forbidden. Wrong url for resources.");
+
+    const fileId =
+      typeof req.params.fileId === "string"
+        ? Number(req.params.fileId)
+        : req.params.fileId;
+
+    const folderId =
+      req.params.folderId === "null"
+        ? null
+        : typeof req.params.folderId === "string"
+          ? Number(req.params.folderId)
+          : req.params.folderId;
+
+    const userId =
+      typeof req.user.id === "string" ? Number(req.user.id) : req.user.id;
+
+    if (isNaN(fileId) || isNaN(folderId))
+      return res.status(403).send("Forbidden. Wrong url for resources.");
+
+    const fileData = await prisma.files.findFirst({
+      where: {
+        id: fileId,
+        userId,
+        folderId,
+      },
+      select: {
+        id: true,
+        name: true,
+        url: true,
+      },
+    });
+
+    if (!fileData)
+      return res.status(403).send("Forbidden. Wrong url for resources.");
+
+    // file fetching and letting user download logic
+    res.status(200).json(fileData);
+  } catch (err) {
+    next(err);
+  }
+};
+
 // TODO:const filesGet = async (req, res, next) => {};
 // TODO:const filesPost = async (req, res, next) => {};
 // TODO:const filesDelete = async (req, res, next) => {};
-export default { foldersGet, folderDelete, folderPost };
+export default { foldersGet, folderDelete, folderPost, downloadGet };

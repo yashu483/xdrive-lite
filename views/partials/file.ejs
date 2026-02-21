@@ -19,7 +19,8 @@
     <button id="<%= locals.file.id %>" class="options-button" aria-label="folder more options">&hellip;</button>
     <div class="card-menu-options">
       <a href="/folders/delete/file/<%= locals.file.id %>" class="link-delete delete">Delete</a>
-      <a href="/folders/download/<%= locals.file.id %>" class="file-download">Download</a>
+      <a href="/folders/download/<%= locals.folder === null? `null/${locals.file.id}`: `${locals.folder.id}/${locals.file.id}` %>"
+        class="file-download">Download</a>
     </div>
   </div>
 </div>
