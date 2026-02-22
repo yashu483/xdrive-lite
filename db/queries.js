@@ -49,6 +49,7 @@ const getFolderByFolderId = async (folderId, userId) => {
               children: true,
             },
           },
+          parentId: true,
         },
       },
       parent: {
@@ -83,6 +84,7 @@ const getFoldersForUser = async (userId) => {
     select: {
       name: true,
       id: true,
+      parentId: true,
       _count: {
         select: {
           files: true,
@@ -152,6 +154,37 @@ const deleteFile = async (id, userId, folderId) => {
   });
 };
 
+const deleteLoop = async (folderId, userId, parentId) => {};
+
+const haveDependents = async (id, userId, parentId) => {
+  const data = await prisma.folders.findFirst({
+    where: {
+      id,
+      userId,
+      parentId,
+    },
+    select: {
+      id,
+      userId,
+      parentId,
+    },
+    include: {
+      _count: {
+        select: {
+          files: true,
+          children: true,
+        },
+      },
+    },
+  });
+  return data._count.files !== 0 && data._count.children !== 0;
+};
+const deleteFolder = async (id, userId, parentId) => {
+  // fist check if current folder have any dependents
+  // if yes run command to delete all of the items
+  // if no then delete current folder itself and return
+};
+
 export default {
   createFolder,
   storeFilesData,
@@ -161,5 +194,5 @@ export default {
   getFilesByFolderId,
   getFilesForUser,
   getFileData,
-  deleteFile
+  deleteFile,
 };

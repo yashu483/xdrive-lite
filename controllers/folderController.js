@@ -206,6 +206,9 @@ const folderPost = [
 // delete action controller
 const folderDelete = async (req, res, next) => {
   try {
+    if (!req.user) {
+      return res.redirect("/login");
+    }
     const { category, itemId } = req.params;
     const folderId =
       req.params.folderId === "null" ? null : Number(req.params.folderId);
@@ -217,6 +220,7 @@ const folderDelete = async (req, res, next) => {
         return res.status(200).render(`/folders/${folderId}`);
       }
     } else if (category === "folder") {
+      res.send("got");
     } else {
       res.status(400).redirect("/folders");
     }

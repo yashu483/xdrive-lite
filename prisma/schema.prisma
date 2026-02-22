@@ -33,7 +33,7 @@ model Folders {
   // self relation
 
   parentId Int?
-  parent   Folders?  @relation("FolderHierarchy", fields: [parentId], references: [id])
+  parent   Folders?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
   children Folders[] @relation("FolderHierarchy")
 
   files Files[]
@@ -50,7 +50,7 @@ model Files {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   folderId  Int?
-  folder    Folders? @relation(fields: [folderId], references: [id])
+  folder    Folders? @relation(fields: [folderId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@unique([userId, folderId, id])
