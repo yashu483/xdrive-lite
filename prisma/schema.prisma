@@ -42,16 +42,17 @@ model Folders {
 }
 
 model Files {
-  id        Int      @id @default(autoincrement())
-  name      String?
-  url       String
-  mimetype  String
-  size      Int
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  folderId  Int?
-  folder    Folders? @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  name         String?
+  url          String
+  resourceType String
+  publicId     String
+  size         Int
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id])
+  folderId     Int?
+  folder       Folders? @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
 
   @@unique([userId, folderId, id])
 }

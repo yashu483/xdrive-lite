@@ -14,17 +14,17 @@ const createFolder = async (name, parentId, userId) => {
 const storeFilesData = async (files, folderId, userId) => {
   await Promise.all(
     files.map((file) => {
-      const { originalname, mimetype, size } = file;
-      const url = "mock.com";
-      // TODO:HERE
+      const { original_filename, resource_type, bytes, secure_url, public_id } =
+        file;
       return prisma.files.create({
         data: {
-          name: originalname,
-          mimetype,
-          size,
-          url,
+          name: original_filename,
+          resourceType: resource_type,
+          size: bytes,
+          url: secure_url,
           userId,
           folderId,
+          publicId: public_id,
         },
       });
     }),
@@ -138,6 +138,22 @@ const getFileData = async (id, userId, folderId) => {
       id: true,
       name: true,
       url: true,
+      publicId: true,
+    },
+  });
+  return fileData;
+};
+
+const getFileDataForDelete = async (id, userId, folderId) => {
+  const fileData = await prisma.files.findFirst({
+    where: {
+      id,
+      userId,
+      folderId,
+    },
+    select: {
+      publicId: true,
+      resourceType: true,
     },
   });
   return fileData;
@@ -195,4 +211,5 @@ export default {
   getFilesForUser,
   getFileData,
   deleteFile,
+  getFileDataForDelete,
 };

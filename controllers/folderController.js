@@ -2,6 +2,8 @@ import db from "./../db/queries.js";
 import { Prisma } from "../generated/prisma/client.js";
 import { body, validationResult, matchedData } from "express-validator";
 import multer from "multer";
+import streamifier from "streamifier";
+import cloudinary from "../cloud/cloudinary.js";
 
 const foldersGet = async (req, res, next) => {
   try {
@@ -156,7 +158,7 @@ const createFolderReq = async (req, res) => {
   parentId ? res.redirect(`/folders/${parentId}`) : res.redirect("/folders");
 };
 
-// utility function
+// utility function for uploading and storing file data
 const createFilesReq = async (req, res) => {
   const files = req.files;
   const userId =
@@ -164,7 +166,7 @@ const createFilesReq = async (req, res) => {
 
   const folderId = req.params.folderId ? Number(req.params.folderId) : null;
 
-  await db.storeFilesData(files, folderId, req.user.id);
+  await db.storeFilesData(files, folderId, userId);
 
   if (req.params.folderId)
     return res.redirect(`/folders/${req.params.folderId}`);
@@ -195,15 +197,55 @@ const folderPost = [
           res.redirect("/folders");
           return;
         }
-        await createFilesReq(req, res);
+        const uploadPromises = req.files.map((file) => {
+          return new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+              {
+                folder: "top_file_uploader",
+                resource_type: "auto",
+                filename_override: file.originalname,
+                use_filename: true,
+                unique_filename: true,
+              },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result);
+              },
+            );
+            streamifier.createReadStream(file.buffer).pipe(stream);
+          });
+        });
+        const result = await Promise.allSettled(uploadPromises);
+
+        const successFullUploads = result
+          .filter((r) => r.status === "fulfilled")
+          .map((r) => r.value);
+
+        const failedUpload = result.filter((r) => r.status === "rejected");
+
+        if (failedUpload.length === 0) {
+          req.files = successFullUploads;
+          await createFilesReq(req, res);
+          return;
+        }
+
+        // cleanup action if any upload has failed
+        await Promise.all(
+          successFullUploads.map((file) => {
+            cloudinary.uploader.destroy(file.public_id, {
+              resource_type: file.resource_type,
+            });
+          }),
+        );
       });
     } catch (err) {
+      console.log(err);
       next(err);
     }
   },
 ];
 
-// delete action controller
+// delete request controller
 const folderDelete = async (req, res, next) => {
   try {
     if (!req.user) {
@@ -214,7 +256,22 @@ const folderDelete = async (req, res, next) => {
       req.params.folderId === "null" ? null : Number(req.params.folderId);
 
     if (category === "file") {
-      await db.deleteFile(Number(itemId), req.user.id, folderId);
+      const fileData = await db.getFileDataForDelete(
+        Number(itemId),
+        req.user.id,
+        folderId,
+      );
+      if (!fileData) return res.redirect("/folders");
+      const result = await cloudinary.uploader.destroy(fileData.publicId, {
+        resource_type: fileData.resourceType,
+      });
+      console.log("file deleted");
+
+      if (result.result === "ok") {
+        await db.deleteFile(Number(itemId), req.user.id, folderId);
+      } else {
+        res.json("error: file couldn't deleted");
+      }
       if (folderId === null) return res.status(200).redirect("/folders");
       else {
         return res.status(200).render(`/folders/${folderId}`);
