@@ -14,8 +14,14 @@ const createFolder = async (name, parentId, userId) => {
 const storeFilesData = async (files, folderId, userId) => {
   await Promise.all(
     files.map((file) => {
-      const { original_filename, resource_type, bytes, secure_url, public_id } =
-        file;
+      const {
+        original_filename,
+        resource_type,
+        bytes,
+        secure_url,
+        public_id,
+        mimetype,
+      } = file;
       return prisma.files.create({
         data: {
           name: original_filename,
@@ -25,6 +31,7 @@ const storeFilesData = async (files, folderId, userId) => {
           userId,
           folderId,
           publicId: public_id,
+          mimetype,
         },
       });
     }),

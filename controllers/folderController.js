@@ -219,7 +219,7 @@ const folderPost = [
               },
               (error, result) => {
                 if (error) reject(error);
-                else resolve(result);
+                else resolve({ ...result, mimetype: file.mimetype });
               },
             );
             streamifier.createReadStream(file.buffer).pipe(stream);
@@ -359,7 +359,4 @@ const downloadGet = async (req, res, next) => {
   }
 };
 
-// TODO:const filesGet = async (req, res, next) => {};
-// TODO:const filesPost = async (req, res, next) => {};
-// TODO:const filesDelete = async (req, res, next) => {};
 export default { foldersGet, folderDelete, folderPost, downloadGet };

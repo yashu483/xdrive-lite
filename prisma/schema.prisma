@@ -46,6 +46,7 @@ model Files {
   name         String?
   url          String
   resourceType String
+  mimetype     String
   publicId     String
   size         Int
   userId       Int
