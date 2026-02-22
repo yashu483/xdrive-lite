@@ -36,7 +36,7 @@ const foldersGet = async (req, res, next) => {
       }
 
       const files = await db.getFilesByFolderId(folderId, req.user.id);
-      const shortenDateArr = await Promise.all(
+      const updatedArray = await Promise.all(
         files.map((file) => {
           const date = file.createdAt;
           const formatted = date.toLocaleString("en-IN", {
@@ -48,12 +48,17 @@ const foldersGet = async (req, res, next) => {
             second: "2-digit",
             hour12: false,
           });
-          return { ...file, createdAt: formatted };
+          const downloadURL = cloudinary.url(file.publicId, {
+            resource_type: file.resourceType,
+            secure: true,
+            flags: "attachment",
+          });
+          return { ...file, createdAt: formatted, downloadURL };
         }),
       );
       res.status(200).render("folders", {
         folder: folder,
-        files: shortenDateArr,
+        files: updatedArray,
         errors: errors,
       });
       if (errors) delete req.session.validationErr;
@@ -65,7 +70,7 @@ const foldersGet = async (req, res, next) => {
       const folders = await db.getFoldersForUser(req.user.id);
       const files = await db.getFilesForUser(req.user.id);
 
-      const shortenDateArr = await Promise.all(
+      const updatedArray = await Promise.all(
         files.map((file) => {
           const date = file.createdAt;
           const formatted = date.toLocaleString("en-IN", {
@@ -76,12 +81,17 @@ const foldersGet = async (req, res, next) => {
             minute: "2-digit",
             hour12: false,
           });
-          return { ...file, createdAt: formatted };
+          const downloadURL = cloudinary.url(file.publicId, {
+            resource_type: file.resourceType,
+            secure: true,
+            flags: "attachment",
+          });
+          return { ...file, createdAt: formatted, downloadURL };
         }),
       );
       res.render("folders", {
         folders: folders,
-        files: shortenDateArr,
+        files: updatedArray,
         errors: errors,
       });
       return;
@@ -277,7 +287,31 @@ const folderDelete = async (req, res, next) => {
         return res.status(200).render(`/folders/${folderId}`);
       }
     } else if (category === "folder") {
-      res.send("got");
+      const itemNum = Number(itemId);
+      if (isNaN(itemNum)) return res.send("Wrong url.");
+
+      const files = await db.getNestedFilesRaw(itemNum, req.user.id);
+
+      if (files.length > 0) {
+        const images = files.filter((f) => f.resourceType === "image");
+        const pdfs = files.filter((f) => f.resourceType !== "image");
+
+        if (images.length > 0) {
+          await cloudinary.api.delete_resources(
+            images.map((f) => f.publicId),
+            { resource_type: "image" },
+          );
+        }
+        if (pdfs.length > 0) {
+          await cloudinary.api.delete_resources(
+            pdfs.map((f) => f.publicId),
+            { resource_type: "raw" },
+          );
+        }
+      }
+      await db.deleteFolder(itemNum, req.user.id, folderId);
+      if (folderId === null) return res.redirect("/folders");
+      else return res.redirect(`/folders/${folderId}`);
     } else {
       res.status(400).redirect("/folders");
     }

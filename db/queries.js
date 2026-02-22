@@ -114,6 +114,7 @@ const getFilesByFolderId = async (folderId, userId) => {
       userId,
     },
   });
+
   return files;
 };
 
@@ -170,37 +171,47 @@ const deleteFile = async (id, userId, folderId) => {
   });
 };
 
-const deleteLoop = async (folderId, userId, parentId) => {};
-
-const haveDependents = async (id, userId, parentId) => {
-  const data = await prisma.folders.findFirst({
+const deleteFolder = async (id, userId, parentId) => {
+  await prisma.folders.delete({
     where: {
       id,
       userId,
       parentId,
     },
-    select: {
-      id,
-      userId,
-      parentId,
-    },
-    include: {
-      _count: {
-        select: {
-          files: true,
-          children: true,
-        },
-      },
-    },
   });
-  return data._count.files !== 0 && data._count.children !== 0;
-};
-const deleteFolder = async (id, userId, parentId) => {
-  // fist check if current folder have any dependents
-  // if yes run command to delete all of the items
-  // if no then delete current folder itself and return
 };
 
+// raw sql queries
+const getNestedFilesRaw = async (folderId, userId) => {
+  const files = await prisma.$queryRaw`
+WITH RECURSIVE folder_tree AS (
+  SELECT "id"
+  FROM "Folders"
+
+  WHERE "id" = ${folderId}::int AND "userId" = ${userId}::int
+
+  UNION ALL
+
+  SELECT f."id"
+  FROM "Folders" f
+  INNER JOIN folder_tree ft
+    ON f."parentId" = ft."id"
+)
+
+SELECT
+  "id",
+  "publicId",
+  "resourceType",
+  "userId",
+  "folderId"
+FROM "Files"
+WHERE "folderId" IN (
+  SELECT "id" FROM folder_tree
+);
+`;
+
+  return files;
+};
 export default {
   createFolder,
   storeFilesData,
@@ -212,4 +223,6 @@ export default {
   getFileData,
   deleteFile,
   getFileDataForDelete,
+  getNestedFilesRaw,
+  deleteFolder,
 };

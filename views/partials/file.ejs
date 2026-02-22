@@ -20,8 +20,7 @@
     <div class="card-menu-options">
       <a href="/folders/delete/<%= locals.folder === null ? `null/file/${locals.file.id}` : `${locals.folder.id}/file/${locals.file.id}` %>"
         class="link-delete delete">Delete</a>
-      <a href="/folders/download/<%= locals.folder === null? `null/${locals.file.id}`: `${locals.folder.id}/${locals.file.id}` %>"
-        class="file-download">Download</a>
+      <a href="<%= locals.file.downloadURL %> %>" class="file-download">Download</a>
     </div>
   </div>
 </div>
