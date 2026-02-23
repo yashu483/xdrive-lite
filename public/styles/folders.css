@@ -11,6 +11,7 @@ html[data-theme="light"] {
   --overlay-bg: rgba(0, 0, 0, 0.3);
   --bottom-sheet-bg: #fff;
   --sheet-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+  --parent-color: rgb(89, 89, 255);
 }
 html[data-theme="dark"] {
   --upload-bg: white;
@@ -25,6 +26,7 @@ html[data-theme="dark"] {
   --overlay-bg: rgba(65, 65, 65, 0.3);
   --bottom-sheet-bg: black;
   --sheet-shadow: 0 -5px 20px rgba(219, 219, 219, 0.2);
+  --parent-color: rgb(134, 134, 253);
 }
 
 .main-wrapper {
@@ -85,6 +87,7 @@ main {
 }
 
 button.sort-button {
+  opacity: 0;
   align-self: stretch;
   width: 30px;
   background-image: var(--sort-icon);
@@ -108,7 +111,15 @@ section.files-container {
   margin-top: 10px;
   align-self: flex-start;
 }
+.parent-link-heading {
+  color: var(--parent-color);
+  text-decoration: none;
+}
 
+.parent-link-heading:visited {
+  color: var(--parent-color);
+  text-decoration: none;
+}
 /* new folder form bottom sheet */
 
 .overlay {

@@ -1,3 +1,7 @@
+"use strict";
+
+// this file includes toggle related logics
+
 const overlay = document.getElementById("overlay");
 const bottomSheet = document.getElementById("bottomSheet");
 const input = document.getElementById("folderName");

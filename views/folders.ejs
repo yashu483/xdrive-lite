@@ -12,6 +12,7 @@
       <link rel="stylesheet" href="/styles/partials/empty-drive.css">
       <% }else{ %>
         <link rel="stylesheet" href="/styles/partials/no-empty-drive.css">
+        <script src="/scripts/folders.js" defer></script>
         <% } %>
           <title>Home | Cloudly</title>
 </head>
@@ -35,8 +36,18 @@
 
         <section class="files-container">
           <h1 class="folder-section-heading">
-
-            Cloudly Drive
+            <% if(locals.folder && locals.folder.parentId===null){ %>
+              <a href="/folders" class="parent-link-heading">
+                <%= locals.currentUser.username %>
+              </a>
+              <%=' ' + `> ${locals.folder.name}` %>
+                <% }else if(locals.folder && locals.folder.parentId !==null){%>
+                  <a href="/folders/<%= locals.folder.parentId %>" class="parent-link-heading">
+                    <%= locals.folder.parent.name%>
+                  </a> <%= ' ' +'>'+ ` ${locals.folder.name}`%>
+                <% }else{%>
+                  <%= locals.currentUser.username%>
+                    <%}%>
           </h1>
           <% if(((!locals.folder || (locals.folder?._count.children===0 && locals.folder?._count.files===0)) &&
             (!locals.folders || locals.folders && locals.folders.length===0)) && (!locals.files ||locals.files &&
@@ -44,7 +55,7 @@
             <div class="no-items-container">
               <img src="/images/cloud.svg" aria-hidden="true" id="cloud-image">
               <h2 class="drive-empty">Cloudly drive is empty</h2>
-              <p class="empty-message">You haven't added items to your Cloud drive.</p>
+              <p class="empty-message">You haven' t added items to your Cloud drive.</p>
             </div>
             <% } else{ %>
               <% if(locals.folder && locals.folder.children?.length !==0){ %>
@@ -74,7 +85,8 @@
             <button type="button" class="close-btn" onclick="closeModal()">x</button>
           </div>
           <input type="text" id="folderName" name="folderName" required oninput="handleInput()">
-          <button class="create-btn" id="createBtn" disabled type="submit">Create </button>
+          <button class="create-btn" id="createBtn" disabled type="submit">Create
+          </button>
         </form>
 
       </main>
