@@ -8,7 +8,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import passport from "passport";
 import bcrypt from "bcryptjs";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
-const PORT = process.env.SERVER_PORT;
+const PORT = process.env.PORT;
 
 //importing server side modules and routes
 import { prisma } from "./lib/prisma.js";
@@ -112,5 +112,5 @@ app.listen(PORT, (err) => {
   if (err) {
     throw new Error(err);
   }
-  console.log(`App is running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
