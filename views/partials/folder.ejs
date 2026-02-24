@@ -15,10 +15,10 @@
     </div>
   </div>
   <div class="folder-menu-section">
-    <button id="<%= locals.folder.id %>" class="options-button" aria-label="folder more options">&hellip;</button>
+    <button class="options-button" aria-label="folder more options">&hellip;</button>
     <div class="card-menu-options"><a
         href="/folders/delete/<%= locals.folder.parentId === null ? `null/folder/${locals.folder.id}` : `${locals.folder.parentId}/folder/${locals.folder.id}` %>"
-        class="link-delete delete">Delete</a>
+        class="link-delete delete folder-delete-link">Delete</a>
     </div>
   </div>
 </div>

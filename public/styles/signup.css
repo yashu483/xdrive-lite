@@ -64,6 +64,19 @@ p.login-link > a:visited {
   text-decoration: underline 1px #6d4aff;
 }
 
+.errors-container {
+  background-color: rgb(252, 212, 218);
+  border: red;
+  border-radius: 8px;
+}
+.errors-container > ul {
+  color: red;
+}
+
+.errors-container > ul > li::marker {
+  content: "!  ";
+}
+
 @media screen and (min-width: 500px) {
   form {
     min-width: 500px;

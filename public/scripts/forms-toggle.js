@@ -55,4 +55,23 @@ optionBtn.forEach((button, index) => {
 });
 
 document.addEventListener("click", closeOptionsMenu);
-document.addEventListener("touchstart", closeOptionsMenu);
+
+// disabled feature- asks user if they want to delete the folder
+
+/*const folderDeleteLinks = document.querySelectorAll(".folder-delete-link");
+
+folderDeleteLinks.forEach((link) => {
+  link.addEventListener("click", (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const allow = confirm(
+      "Do you want to delete the folder? All of its content will be deleted permanently!",
+    );
+    if (allow) {
+      window.location.href = link.href;
+    } else {
+      closeOptionsMenu();
+    }
+  });
+});*/

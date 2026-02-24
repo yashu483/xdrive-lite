@@ -12,7 +12,6 @@
       <link rel="stylesheet" href="/styles/partials/empty-drive.css">
       <% }else{ %>
         <link rel="stylesheet" href="/styles/partials/no-empty-drive.css">
-        <script src="/scripts/folders.js" defer></script>
         <% } %>
           <title>Home | Cloudly</title>
 </head>
@@ -49,32 +48,46 @@
                   <%= locals.currentUser.username%>
                     <%}%>
           </h1>
-          <% if(((!locals.folder || (locals.folder?._count.children===0 && locals.folder?._count.files===0)) &&
-            (!locals.folders || locals.folders && locals.folders.length===0)) && (!locals.files ||locals.files &&
-            locals.files.length===0)) { %>
-            <div class="no-items-container">
-              <img src="/images/cloud.svg" aria-hidden="true" id="cloud-image">
-              <h2 class="drive-empty">Cloudly drive is empty</h2>
-              <p class="empty-message">You haven' t added items to your Cloud drive.</p>
+          <%if(errors){ %>
+            <div id="folder-errors-container" class="errors-container">
+              <button type="button" id="folder-error-close-btn">X</button>
+              <ul>
+                <% locals.errors.forEach((err)=> {%>
+                  <li>
+                    There was an error in your previous folder creation attempt. Your value : "<%= err?.value%>". Error
+                      cause:
+                      <%= err.msg%>
+                  </li>
+                  <%})%>
+              </ul>
             </div>
-            <% } else{ %>
-              <% if(locals.folder && locals.folder.children?.length !==0){ %>
-                <% locals.folder.children.forEach((childFolder)=>{ %>
-                  <%- include('partials/folder', {folder:childFolder}) %>
-                    <% } ) %>
-                      <% } %>
-                        <% if(locals.folders && locals.folders.length !==0 ){ %>
-                          <% locals.folders.forEach((childFolder)=>{ %>
-                            <%- include('partials/folder', {folder:childFolder}) %>
-                              <% } ) %>
-                                <% } %>
-                                  <% if(locals.files && locals.files.length !==0 ){ %>
-                                    <% locals.files.forEach((childFile)=>{ %>
-                                      <%- include('partials/file', {file:childFile, folder: locals.folder ?
-                                        locals.folder.id: null}) %>
-                                        <% } ) %>
-                                          <% } %>
-                                            <% }%>
+            <% }%>
+              <% if(((!locals.folder || (locals.folder?._count.children===0 && locals.folder?._count.files===0)) &&
+                (!locals.folders || locals.folders && locals.folders.length===0)) && (!locals.files ||locals.files &&
+                locals.files.length===0)) { %>
+                <div class="no-items-container">
+                  <img src="/images/cloud.svg" aria-hidden="true" id="cloud-image">
+                  <h2 class="drive-empty">Cloudly drive is empty</h2>
+                  <p class="empty-message">You haven' t added items to your Cloud drive.</p>
+                </div>
+                <% } else{ %>
+                  <% if(locals.folder && locals.folder.children?.length !==0){ %>
+                    <% locals.folder.children.forEach((childFolder)=>{ %>
+                      <%- include('partials/folder', {folder:childFolder}) %>
+                        <% } ) %>
+                          <% } %>
+                            <% if(locals.folders && locals.folders.length !==0 ){ %>
+                              <% locals.folders.forEach((childFolder)=>{ %>
+                                <%- include('partials/folder', {folder:childFolder}) %>
+                                  <% } ) %>
+                                    <% } %>
+                                      <% if(locals.files && locals.files.length !==0 ){ %>
+                                        <% locals.files.forEach((childFile)=>{ %>
+                                          <%- include('partials/file', {file:childFile, folder: locals.folder ?
+                                            locals.folder.id: null}) %>
+                                            <% } ) %>
+                                              <% } %>
+                                                <% }%>
         </section>
         <div class="overlay" id="overlay" onclick="closeModal()"></div>
         <!-- bottom sheet -->
@@ -92,6 +105,7 @@
       </main>
     </div>
     <%- include('footer') %>
+      <script defer src="/scripts/folders.js"></script>
 </body>
 
 </html>

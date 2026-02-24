@@ -17,7 +17,9 @@ const foldersGet = async (req, res, next) => {
     }
 
     // gets errors from failed validation redirected from POST req to folders
-    const errors = req.session.validationErr ? req.session.validationErr : null;
+    const errors = req.session.folderValidationErr
+      ? req.session.validationErr
+      : null;
 
     const folderIdParam = req.params.folderId;
     const folderId = folderIdParam !== undefined ? Number(folderIdParam) : null;
@@ -61,7 +63,7 @@ const foldersGet = async (req, res, next) => {
         files: updatedArray,
         errors: errors,
       });
-      if (errors) delete req.session.validationErr;
+      if (errors) delete req.session.folderValidationErr;
       return;
     }
 
@@ -94,6 +96,7 @@ const foldersGet = async (req, res, next) => {
         files: updatedArray,
         errors: errors,
       });
+      if (errors) delete req.session.folderValidationErr;
       return;
     }
   } catch (err) {
@@ -154,9 +157,9 @@ const createFolderReq = async (req, res) => {
   const errors = validationResult(req);
   const parentId = req.params.folderId ? Number(req.params.folderId) : null;
 
-  // checks for validation err
+  // checks for validation err and store them in req session as redirection is inevitable
   if (!errors.isEmpty()) {
-    req.session.validationErr = errors.array();
+    req.session.folderValidationErr = errors.array();
     parentId ? res.redirect(`/folders/${parentId}`) : res.redirect("/folders");
     return;
   }

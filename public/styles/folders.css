@@ -98,6 +98,34 @@ button.sort-button {
   border: none;
 }
 
+.errors-container {
+  background-color: rgb(252, 212, 218);
+  border: red;
+  border-radius: 8px;
+
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.errors-container > button {
+  position: absolute;
+  top: -10px;
+  right: -3px;
+  cursor: pointer;
+  background-color: rgb(252, 212, 218);
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  border: none;
+}
+.errors-container > ul {
+  color: red;
+}
+
+.errors-container > ul > li::marker {
+  content: "!  ";
+}
+
 /* folder section styles */
 
 section.files-container {
@@ -250,5 +278,8 @@ section.files-container {
   }
   .sheet-header h3 {
     font-size: 1.2rem;
+  }
+  .errors-container > button {
+    right: -10px;
   }
 }

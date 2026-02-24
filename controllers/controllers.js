@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { body, validationResult, matchedData } from "express-validator";
 import { prisma } from "./../lib/prisma.js";
 
+// homepage route
 const indexGet = (req, res) => {
   if (req.user) {
     return res.redirect("/folders");
@@ -9,14 +10,21 @@ const indexGet = (req, res) => {
   res.render("index");
 };
 
+// login page handlers
 const loginGet = (req, res) => {
   if (req.user) {
     res.redirect("/");
     return;
   }
+  if (req.session.messages && req.session.messages.length !== 0) {
+    const messages = req.session.messages;
+    req.session.messages = [];
+    return res.render("login", { errors: messages });
+  }
   res.render("login");
 };
 
+// signup page handlers
 const signupGet = (req, res) => {
   if (req.user) {
     res.redirect("/");

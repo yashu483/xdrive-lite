@@ -23,6 +23,7 @@ div.folder-card {
   display: flex;
   gap: 20px;
   align-items: center;
+  flex: 1;
 }
 
 .folder-card-icon {
@@ -56,9 +57,9 @@ p.folder-data {
   background-color: inherit;
   border: none;
   cursor: pointer;
-  position: absolute;
+  /* position: absolute;
   top: 8px;
-  right: 8px;
+  right: 8px; */
 }
 
 .card-menu-options {

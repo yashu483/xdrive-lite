@@ -53,14 +53,13 @@ passport.use(
           username: username,
         },
       });
-      console.log(user);
+
       // checks if username exists
       if (!user) {
         return done(null, false, { message: "Invalid username" });
       }
 
       const match = await bcrypt.compare(password, user.password);
-      console.log(match);
       if (!match) {
         return done(null, false, { message: "Invalid password" });
       }
